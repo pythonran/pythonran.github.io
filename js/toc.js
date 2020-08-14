@@ -1,5 +1,5 @@
-var toc = document.getElementById('sidebar-stoc')
-
+var toc = document.getElementById('stoc')
+console.log('stoc:', toc)
 if (toc == null) {
     window.addEventListener("scroll", scrollcatelogHandler);
     var tocPosition = toc.offsetTop;

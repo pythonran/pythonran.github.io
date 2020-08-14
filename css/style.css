@@ -56,6 +56,9 @@ specific font stacks to ensure the greatest OS/browser compatibility.
     margin-left: 1em;
     padding-left: 0; }
 
+.toc li {
+  padding: 3px; }
+
 html,
 button,
 input,
@@ -1404,7 +1407,7 @@ figure.highlight,
       list-style-type: none; }
   #toc .toc-child {
     margin-left: 1em;
-    padding-left: 0; }
+    padding: 5pm; }
 
 @media print, screen and (max-width: 48em) {
   .toc-article {
