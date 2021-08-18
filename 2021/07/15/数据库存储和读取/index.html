@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据存储," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/%5Bobject%20Object%5D?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="数据库存储和读取转载：https:&#x2F;&#x2F;my.oschina.net&#x2F;u&#x2F;1859679&#x2F;blog&#x2F;1581379 在整个数据库体系结构中，我们可以使用不同的存储引擎来存储数据，而绝大多数存储引擎都以二进制的形式存储数据。 在 InnoDB 存储引擎中，所有的数据都被逻辑地存放在表空间中，表空间（tablespace）是存储引擎中最高的存储逻辑单位，在表空间的下面又包括段（segment）、区（ex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库存储和读取">
+<meta property="og:url" content="http://yoursite.com/2021/07/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E5%82%A8%E5%92%8C%E8%AF%BB%E5%8F%96/index.html">
+<meta property="og:site_name" content="小楼一夜醉酒">
+<meta property="og:description" content="数据库存储和读取转载：https:&#x2F;&#x2F;my.oschina.net&#x2F;u&#x2F;1859679&#x2F;blog&#x2F;1581379 在整个数据库体系结构中，我们可以使用不同的存储引擎来存储数据，而绝大多数存储引擎都以二进制的形式存储数据。 在 InnoDB 存储引擎中，所有的数据都被逻辑地存放在表空间中，表空间（tablespace）是存储引擎中最高的存储逻辑单位，在表空间的下面又包括段（segment）、区（ex">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181204093045330.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p6dElzR29vZA==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181204093214562.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p6dElzR29vZA==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181204093253388.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20181204093303605.png">
+<meta property="article:published_time" content="2021-07-15T08:10:08.180Z">
+<meta property="article:modified_time" content="2021-08-18T07:14:47.924Z">
+<meta property="article:author" content="Ran Binkesi">
+<meta property="article:tag" content="数据存储">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20181204093045330.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p6dElzR29vZA==,size_16,color_FFFFFF,t_70">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/15/数据库存储和读取/"/>
+
+
+
+
+
+  <title>数据库存储和读取 | 小楼一夜醉酒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="小楼一夜醉酒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小楼一夜醉酒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E5%82%A8%E5%92%8C%E8%AF%BB%E5%8F%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ran Binkesi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小楼一夜醉酒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库存储和读取</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-15T16:10:08+08:00">
+                2021-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2><span id="数据库存储和读取">数据库存储和读取</span></h2><p>转载：<a href="https://my.oschina.net/u/1859679/blog/1581379" target="_blank" rel="noopener">https://my.oschina.net/u/1859679/blog/1581379</a></p>
+<p>在整个数据库体系结构中，我们可以使用不同的存储引擎来存储数据，而绝大多数存储引擎都以二进制的形式存储数据。</p>
+<p>在 InnoDB 存储引擎中，所有的数据都被逻辑地存放在表空间中，表空间（tablespace）是存储引擎中最高的存储逻辑单位，在表空间的下面又包括段（segment）、区（extent）、页（page）：</p>
+<a id="more"></a>
+
+
+
+<p><img src="https://img-blog.csdnimg.cn/20181204093045330.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p6dElzR29vZA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>同一个数据库实例的所有表空间都有相同的页大小；默认情况下，表空间中的页大小都为 16KB，当然也可以通过改变 innodb_page_size 选项对默认大小进行修改，需要注意的是不同的页大小最终也会导致区大小的不同：</p>
+<p>三、随机读取和顺序读取<br>在我们常用的 sql 理解中，数据是以行的形式读取出来的，其实不然，通过上述的结构，我们可以了解到，单次从磁盘读取单位是页，而不是行，也就是说，你即便只读取一行记录，从磁盘中也是会读取一页的，当然了单页读取代价也是蛮高的，一般都会进行预读，这些后续再说。</p>
+<p><img src="https://img-blog.csdnimg.cn/20181204093214562.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p6dElzR29vZA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>关系型数据库管理系统最重要的一个目标就是，确保表或者索引中的数据是随时可以用的。那么为了尽可能的实现这个目标，会使用内存中的缓冲池来最小化磁盘活动。</p>
+<p>每一个缓冲池都足够大，大到可以存放许多页，可能是成千上万的页。</p>
+<p>缓冲池管理器将尽力确保经常使用的数据被保存于池中，以避免一些不必要的磁盘读。如果一个索引或者表页在缓冲池中被找到，那么将会处理很快。</p>
+<p>如果在缓冲池中，没有找到数据，会从磁盘服务器的缓冲区里面去读取。</p>
+<p>磁盘服务器的缓冲区，如同数据库的缓冲池读取一样，磁盘服务器试图将频繁使用的数据保留在内存中，以降低高昂的磁盘读取成本。这个读取成本大概会在 1ms 左右。</p>
+<p>如果磁盘服务器的缓冲池中依然没有找到数据，此时就必须要从磁盘读取了，此时读取又分区随机读取和顺序读取。</p>
+<p>2、随机 I/O<br>我们必须记住一个页包含了多条记录，我们可能需要该页上的所有行，也可能是其中一部分，或者是一行，但所花费的成本都是相同的，读取一个页，需要一次随机 I/O, 大约需要 10ms 的时间。</p>
+<p><img src="https://img-blog.csdnimg.cn/20181204093253388.png" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20181204093303605.png" alt="img"></p>
+<p>3、顺序读取<br>如果我们需要将多个页读取到缓冲池中，并按顺序处理它们，此时读取的速度回变的很快，具体的原理，在 B 树索引中也有过介绍，此时读取每个页面（4kb）所花费的时间大概为 0.1ms 左右，这个时间消耗对随机 IO 有很大的优势。</p>
+<p><strong>以下几种情况，会对数据进行顺序读取。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">全表扫描</span><br><span class="line"></span><br><span class="line">全索引扫描</span><br><span class="line"></span><br><span class="line">索引片扫描</span><br><span class="line"></span><br><span class="line">通过聚蔟索引扫描表行</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>顺序读取有两个重要的优势：</strong></p>
+<p>同时读取多个页意味着平均读取每个页的时间将会减少。在当前磁盘服务器条件下，对于 4kb 大小的页而言，这一值可能会低于 0.1ms（40MB/s）<br>由于数据库引擎知道需要读取哪些页，所有可以在页被真正请求之前就提前将其读取进来，我们称为预读</p>
+<h2><span id="最大与最小数据库的阀值">最大与最小（数据库的阀值）</span></h2><ol>
+<li>一个表里最多可有 1017 列（在 MySQL 5.6.9 之前最大支持 1000 列）。虚拟列也受限这个限制。</li>
+<li>一个表最多可以有 64 个二级索引。</li>
+<li>如果 innodb_large_prefix 打开，在 InnoDB 表 DYNAMIC 或 COMPRESSED 列格式下，索引前缀最大支持前 3072 字节；如果不打开的话，在任意列格式下，最多支持前 767 字节。这个限制既适用于前缀索引也适用于全列索引。<br>基于一个 16KB 的页最多装 3072 个字节，如果你把 InnoDB 的 page 大小从 8KB 降到 4KB，索引的长度也相应的降低。也就是说，当页是 8KB 的时候最大索引长度是 1536 字节；当页大小是 4KB 的时候最大索引长度是 768 字节;（</li>
+</ol>
+<p>这里与 “紧凑冗余行有关系”</p>
+<p>紧凑和冗余行格式</p>
+<p>当为外部页外存储选择可变长度列时 InnoDB，将该行中的前 768 个字节存储在本地，其余外部存储到溢出页中。每个这样的列都有自己的溢出页列表。768 字节的前缀伴随着一个 20 字节的值，该值存储列的真实长度并指向溢出列表，其中存储了值的其余部分。请参见 第 14.11 节 “InnoDB 行格式”。</p>
+<p>）<br><strong>转载</strong>：<a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-file-space.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.7/en/innodb-file-space.html</a><br><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-file-space.html" target="_blank" rel="noopener">14.12.2 文件空间管理</a></p>
+<p>联合索引最多支持 16 列，如果超过这个限制就会遇到以下错误：<br>ERROR 1070 (42000): Too many key parts specified; max 16 parts allowed</p>
+<ol>
+<li>行长度（除去可变长类型：VARBINARY/VARCHAR/BLOB/TEXT），要小于页长（如 4KB, 8KB, 16KB, and 32KB）的一半。例如：innodb_page_size 长度是 16KB 的话，行长不超过 8KB；如果 innodb_page_size 是 64KB 的话，行长不超过 16KB； LONGBLOB/LONGTEXT/BLOB/TEXT 列必须小于 4GB，整个行长也必须小于 4GB。如果一行小于一页的一半，它可以存在一个 page 里面。如果超过了页的一半，就会把可变长列放到额外的页存（如果对这个感兴趣的话可以看看，MySQL 页管理）。</li>
+<li>行所存储的值的最大值为页的大小的一半，一般情况下页的大小是 16kB，所以每行的长度大小不能超过 8<br>kb；2 的 16 次刚好为 65535；</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+    
+       <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------</div>
+
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8/" rel="tag"># 数据存储</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/15/AVL%20%E6%A0%91%EF%BC%8C%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%8CB%20%E6%A0%91%EF%BC%8CB%20+%20%E6%A0%91%EF%BC%8CTrie%20%E6%A0%91%E9%83%BD%E5%88%86%E5%88%AB%E5%BA%94%E7%94%A8%E5%9C%A8%E5%93%AA%E4%BA%9B%E7%8E%B0%E5%AE%9E%E5%9C%BA%E6%99%AF%E4%B8%AD%EF%BC%9F/" rel="next" title="AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？">
+                <i class="fa fa-chevron-left"></i> AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/15/zookeeper%20watch%E6%9C%BA%E5%88%B6/" rel="prev" title="zookeeper watch机制">
+                zookeeper watch机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Ran Binkesi" />
+          <p class="site-author-name" itemprop="name">Ran Binkesi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库存储和读取"><span class="nav-number">1.</span> <span class="nav-text">数据库存储和读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大与最小数据库的阀值"><span class="nav-number">2.</span> <span class="nav-text">最大与最小（数据库的阀值）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran Binkesi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

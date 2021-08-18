@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/%5Bobject%20Object%5D?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？ AVL 树: 最早的平衡二叉树之一。应用相对其他数据结构比较少。windows 对进程地址空间的管理用到了 AVL 树。红黑树: 平衡二叉树，广泛用在 C++ 的 STL 中。如 map 和 set 都是用红黑树实现的。B&#x2F;B + 树: 用在磁盘文件组织 数据索引和数据库索引。Trie 树 (字典树): 用在统计和排">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？">
+<meta property="og:url" content="http://yoursite.com/2021/07/15/AVL%20%E6%A0%91%EF%BC%8C%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%8CB%20%E6%A0%91%EF%BC%8CB%20+%20%E6%A0%91%EF%BC%8CTrie%20%E6%A0%91%E9%83%BD%E5%88%86%E5%88%AB%E5%BA%94%E7%94%A8%E5%9C%A8%E5%93%AA%E4%BA%9B%E7%8E%B0%E5%AE%9E%E5%9C%BA%E6%99%AF%E4%B8%AD%EF%BC%9F/index.html">
+<meta property="og:site_name" content="小楼一夜醉酒">
+<meta property="og:description" content="AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？ AVL 树: 最早的平衡二叉树之一。应用相对其他数据结构比较少。windows 对进程地址空间的管理用到了 AVL 树。红黑树: 平衡二叉树，广泛用在 C++ 的 STL 中。如 map 和 set 都是用红黑树实现的。B&#x2F;B + 树: 用在磁盘文件组织 数据索引和数据库索引。Trie 树 (字典树): 用在统计和排">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-76c73303b557e7bd2845a3312c3e5bb4_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=2%5Ccdot+log_%7B2%7D+(n%252B1)">
+<meta property="og:image" content="https://pic2.zhimg.com/e4f1b0d6aa782bb9b0dee1ea384fe556_xs.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-3b0dd24fe1bc5e5940cc405233ce1e0e_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-5e2e216cf09c38985dba7fb2fc19d133_xs.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-a5eb5cf0c31872d4ba4293660178aaaa_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-3ee77261097b14b0561610039dc2c41f_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic2.zhimg.com/50/v2-0218d29654d19a81aa60bcc6e89b1d9f_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-7f9c46dcec867762933a20f686d2216e_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic3.zhimg.com/50/v2-f94f1194ecb976b050527391c875bacf_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pica.zhimg.com/50/v2-ed1bffab5b2b8a662c057abe235b6799_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/50/v2-2f17da8d30428a899ed1f7b4500fda86_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/50/v2-9d960b2cb00419e06bc2a979a2f53b51_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/50/v2-75c1582141d7a60b5f02a751b16e46b0_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-f5e31d79bc68b55eb2bf2b4e8f732d97_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/50/v2-650390e1bd4a952cc6232c5c46208e5d_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-4f79124bb9f59d429f5679102ae7fef6_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-0ec841c6176da9160c2c4faa6f364385_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-e884d9b5b91500ac8ecfbe8bcfe3be60_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic1.zhimg.com/50/v2-2de31d5fbc9262f4f4009da02258d49c_720w.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-36fc12137f84953fe95b49e5fc095768_r.jpg?source=1940ef5c">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-1f4501045c33082f75a0cbd5f7167509_ipico.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-1cd22f48113342835d46aa9a34da826d_120x160.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-2656cca49526004e1b6b1a28b783203a_120x160.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/v2-8bd23dab284354d118e91a95fd3a9843_180x120.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-5f8dd51395bec53552651e67d23213dd_180x120.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-f7d74bd59d0b68f0a53de1fe7205bd0e_120x160.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-41d3bb56ac9197a5ad420dade2b28d3d_120x160.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-b6546a28845e426a25b971ce7fcab919_ipico.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-1a4f94e73f4a6600b57b698fca90e76e_ipico.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/885ebd3739f06ea6a3f776f8b9f3fdcd_xs.jpg?source=1940ef5c">
+<meta property="article:published_time" content="2021-07-15T07:58:43.104Z">
+<meta property="article:modified_time" content="2021-08-18T07:16:09.114Z">
+<meta property="article:author" content="Ran Binkesi">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/v2-76c73303b557e7bd2845a3312c3e5bb4_r.jpg?source=1940ef5c">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/15/AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？/"/>
+
+
+
+
+
+  <title>AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？ | 小楼一夜醉酒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="小楼一夜醉酒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小楼一夜醉酒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/15/AVL%20%E6%A0%91%EF%BC%8C%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%8CB%20%E6%A0%91%EF%BC%8CB%20+%20%E6%A0%91%EF%BC%8CTrie%20%E6%A0%91%E9%83%BD%E5%88%86%E5%88%AB%E5%BA%94%E7%94%A8%E5%9C%A8%E5%93%AA%E4%BA%9B%E7%8E%B0%E5%AE%9E%E5%9C%BA%E6%99%AF%E4%B8%AD%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ran Binkesi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小楼一夜醉酒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-15T15:58:43+08:00">
+                2021-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  8.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  30
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>AVL 树，红黑树，B 树，B + 树，Trie 树都分别应用在哪些现实场景中？</p>
+<p><strong>AVL 树</strong>: 最早的平衡二叉树之一。应用相对其他数据结构比较少。windows 对进程地址空间的管理用到了 AVL 树。<strong>红黑树</strong>: 平衡二叉树，广泛用在 C++ 的 STL 中。如 map 和 set 都是用红黑树实现的。<strong>B/B + 树:</strong> 用在磁盘文件组织 数据索引和数据库索引。<strong>Trie 树 (字典树):</strong> 用在统计和排序大量字符串，如自动机。</p>
+<a id="more"></a>
+
+
+<p>AVL 树是平衡二叉搜索树的鼻祖，它的平衡度也最好，左右高度差可以保证在「-1，0，1」，基于它的平衡性，它的查询时间复杂度可以保证是 O（log n）。但每个节点要额外保存一个平衡值，或者说是高度差。这种树是二叉树的经典应用，现在最主要是出现在教科书中。AVL 的平衡算法比较麻烦，需要左右两种 rotate 交替使用，需要分四种情况，是数据结构课的最理想课后作业之一。<strong>这里要重点强调，AVL 插入新节点所需要的最大旋转次数是常数，再说一遍，是常数，不要为这个再来回复或者私信我了。这个也有证明，不需要一直旋转到根节点。</strong><img src="https://pic1.zhimg.com/v2-76c73303b557e7bd2845a3312c3e5bb4_r.jpg?source=1940ef5c" alt="img">红黑树一样也是平衡二叉搜索树，也是工业界最主要使用的二叉搜索平衡树。但平衡度红黑树没 AVL 那么好。也就是说，如果从高度差来说，红黑树是大于 AVL 的，其实也就代表着它的实际查询时间 (最坏情况) 略逊于 AVL 的。数学证明红黑树的最大深度是 <img src="https://www.zhihu.com/equation?tex=2%5Ccdot+log_%7B2%7D+%28n%2B1%29" alt="img"> , 其实最差情况它从根到叶子的最长路可以是最短路的两倍，但也不是很差，所以它的查询时间复杂度也是 O（log n）。从实现角度来说，保存红黑状态，每个节点只需要一位二进制，也就是一个 bit（有些做法，可以把这个 bit 塞到其他地方，就可以不占用额外空间了）。可 AVL 每个节点需要额外存储一个平衡值（数）（按照评论中大神韦易笑的说法，avl 的平衡值可以用两个 bit 来存储，然后塞到指针里，惊才绝艳的搞法。当然指针少两位会有什么问题，我就不多想了，你去找他，他有个很好的 avl 实现）。所以（这里不能用所以，因为谁知道真实原因是啥），一般工业界把红黑树作为一种更通用的平衡搜索数来用，Java 用它来实现 TreeMap, C++ 的 std::set/map/multimap 等等。以上都是二叉（binary）树，其实没有太多实质差别。他们的实现都比较复杂，如果做得不好会带来性能的隐患，所以强烈建议入行不足 10 年的朋友尽量使用系统中的已有默认实现，不管是 avl 还是红黑树，这两个有什么就用什么，千万别自己写代码，能写也别写，留个坑给别人不合适。二叉平衡搜索树的问题在于每次插入和删除都有很大可能需要进行重新平衡，数据就要不停的搬来搬去，在内存中这问题不是特别大，可如果在磁盘中，这个开销可能就大了。有兴趣的朋友还可以看看 2-3-4 tree，它等价于红黑树，可以互相转换。它每个节点可以最多有四个孩子，重新平衡操作的次数稍稍少了一点点。以上这些树绝大多数应用都是作为内存中的数据结构。B/B+ 树就是 N 叉（N-ary）平衡树了，每个节点可以有更多的孩子，新的值可以插在已有的节点里，而不需要改变树的高度，从而大量减少重新平衡和数据迁移的次数，这非常适合做数据库索引这种需要持久化在磁盘，同时需要大量查询和插入操作的应用。以上几种树都是有序的，如果你采用合适的算法遍历整个数，可以得到一个有序的列表。这也是为什么如果有数据库索引的情况下，你 order by 你索引的值，就会速度特别快，因为它并没有给你真的排序，只是遍历树而已。Trie 并不是平衡树，也不一定非要有序。它主要用于前缀匹配，比如字符串，比如说 ip 地址，如果字符串长度是固定或者说有限的，那么 Trie 的深度是可控制的，你可以得到很好的搜索效果，而且插入新数据后不用平衡。不过 Trie 不像 B-tree 通用性那么强，你需要针对你自己的实际应用来设计你自己的 Trie，比如说你做个字典应用，是用 26 个字母，还是用 unicode 来前缀匹配？如果是 ip 地址搜索，是用二进制来前缀拼配，还是八进制来匹配？</p>
+<p><img src="https://pic2.zhimg.com/e4f1b0d6aa782bb9b0dee1ea384fe556_xs.jpg?source=1940ef5c" alt="img"></p>
+<p>韦易笑</p>
+<p>楼上楼下 AVL 被批的很惨，给 AVL 树平反昭雪，今天优化了一下我之前的 AVL 树，总体跑的和 linux 的 rbtree 一样快了：<img src="https://pic3.zhimg.com/v2-3b0dd24fe1bc5e5940cc405233ce1e0e_r.jpg?source=1940ef5c" alt="img">他们都比 std::map 快很多（即便使用动态内存分配，为每个新插入节点临时分配个新内存）。其他 AVL/RBTREE 评测也有类似的结论，见：<a href="https://link.zhihu.com/?target=http%3A//stlavlmap.sourceforge.net/">STL AVL Map</a><br><strong>谣言 1：RBTREE 的平均统计性能比 AVL 好</strong>统计下来一千万个节点插入 AVL 共旋转 <a href="tel:7053316">7053316</a> 次（先左后右算两次），RBTREE 共旋转 <a href="tel:5887217">5887217</a> 次，RBTREE 看起来少是吧？应该很快？但是别忘了 RBTREE 再平衡的操作除了旋转外还有再着色，每次再平衡噼里啪啦的改一片颜色，父亲节点，叔叔，祖父，兄弟节点都要访问一圈，这些都是代价，再者平均树高比 AVL 高也成为各项操作的成本。<br><strong>谣言 2：RBTREE 一般情况只比 AVL 高一两层，这个代价忽略不计</strong>纯粹谣言，随便随机一下，一百万个节点的 RBTREE 树高 27，和一千万个节点的 AVL 树相同，而一千万个节点的 RBTREE 树高 33，比 AVL 多了 6 层，这还不是最坏情况，最坏情况 AVL 只有 1.440 * log(n + 2) - 0.328, 而 RBTREE 是 2 * log(n + 1)，也就是说同样 100 万个节点，AVL 最坏情况是 28 层，rbtree 最坏可以到 39 层。<br><strong>谣言 3：AVL 树删除节点是需要回溯到根节点</strong>我以前也是这么写 AVL 树的，后来发现根据 AVL 的定义，可以做出两个推论，再平衡向上回溯时：插入更新时：如当前节点的<strong>高度没有改变</strong>，则上面所有父节点的高度和平衡也不会改变。<br>删除更新时：如当前节点的<strong>高度没有改变</strong>且<strong>平衡值在 [-1, 1] 区间</strong>，则所有父节点的高度和平衡都不会改变。根据这两个推论，AVL 的插入和删除大部分时候只需要向上回溯一两个节点即可，范围十分紧凑。<br><strong>谣言 4：虽然二者插入一万个节点总时间类似，但是 rbtree 树更平均，avl 有时很快，有时慢很多，rbtree 只需要旋转两次重新染色就行了，比 avl 平均</strong>完全说反了，avl 是公认的比 rbtree 平均的数据结构，插入时间更为平均，rbtree 才是不均衡，有时候直接插入就返回了（上面是黑色节点），有时候插入要染色几个节点但不旋转，有时候还要两次旋转再染色然后递归到父节点。该说法最大的问题是以为 rbtree 插入节点最坏情况是两次旋转加染色，可是忘记了一条，<strong>需要向父节点递归</strong>，比如：当前节点需要旋转两次重染色，然后递归到父节点再旋转两次重染色，再递归到父节点的父节点，直到满足 rbtree 的 5 个条件。这种说法直接把递归给搞忘记了，翻翻看 linux 的 rbtree 代码看看，再平衡时那一堆的 while 循环是在干嘛？不就是向父节点递归么？avl 和 rbtree 插入和删除的最坏情况都需要递归到根节点，都可能需要一路旋转上去，否则你设想下，假设你一直再树的最左边插入 1000 个新节点，每次都想再局部转两次染染色，而不去调整整棵树，不动根节点，可能么？只是说整个过程 avl 更加平均而已。<br>结论：AVL / RBTREE 真的差不多，AVL 被早期各种乱七八糟的实现和数学上的 “统计” 给害了，别盯着 linux 用了 rbtree 就觉得 rbtree 一定好过 avl 了，solaris 里面大范围的使用 avltree ，完全没有 rbtree 的痕迹那。—–更新：无图无真相，给一下我测试的编译器和标准库版本吧，否则疑惑我在和 vc6 做比较呢。主要开发环境：mingw gcc 5.2.0<code>linux rbtree with 10000000 nodes: insert time: 4451ms, height=32 search time: 2037ms error=0 delete time: 548ms total: 7036ms avlmini with 10000000 nodes: insert time: 4563ms, height=27 search time: 2018ms error=0 delete time: 598ms total: 7179ms std::map with 10000000 nodes: insert time: 4281ms search time: 4124ms error=0 delete time: 767ms total: 9172ms linux rbtree with 1000000 nodes: insert time: 355ms, height=26 search time: 171ms error=0 delete time: 46ms total: 572ms avlmini with 1000000 nodes: insert time: 438ms, height=24 search time: 141ms error=0 delete time: 47ms total: 626ms std::map with 1000000 nodes: insert time: 345ms search time: 360ms error=0 delete time: 62ms total: 767ms</code>又测试了一下 vs2017，结论类似：<code>linux rbtree with 10000000 nodes: insert time: 4201ms, height=32 search time: 3411ms error=0 delete time: 567ms total: 8179ms avlmini with 10000000 nodes: insert time: 4250ms, height=27 search time: 3233ms error=0 delete time: 658ms total: 8141ms std::map with 10000000 nodes: insert time: 4658ms search time: 4275ms error=0 delete time: 815ms total: 9748ms linux rbtree with 1000000 nodes: insert time: 330ms, height=26 search time: 316ms error=0 delete time: 62ms total: 708ms avlmini with 1000000 nodes: insert time: 409ms, height=24 search time: 266ms error=0 delete time: 53ms total: 728ms std::map with 1000000 nodes: insert time: 426ms search time: 375ms error=0 delete time: 78ms total: 879ms</code>注意，avlmini 和 linux rbtree 都是使用结构体内嵌的形式，这样和 std::map 这种需要 overhead 的容器比较起来 std::map 太吃亏了，所以我测试时，每次插入 avlmini 和 linux rbtree 之前都会模拟 std::map 为每对新的 (key, value) 分配一个结构体（包含 node 信息和 key, value），再插入，这样加入了内存分配的开销，才和 std::map 进行比较。参考：别人做的更多树和哈希表的评测 <a href="https://link.zhihu.com/?target=https%3A//github.com/rcarbone/kudb">rcarbone/kudb</a></p>
+<p><img src="https://pic3.zhimg.com/v2-5e2e216cf09c38985dba7fb2fc19d133_xs.jpg?source=1940ef5c" alt="img"></p>
+<p>程序员柠檬</p>
+<p>/<strong><strong><strong>***</strong></strong></strong>20210119 更新 *<em>*<em>*</em>*<em>*</em>*<em>*</em>**\</em>/<strong>没想到这个老回答这两天突然火了，那再来更新点干货吧！本职工作是某大厂的 C++ 后台开发，术业有专攻，</strong>文末分享经验，如何成为一名合格的 Linux 后台服务器开发程序员，并推荐书单！<strong>希望对大家有帮助~</strong>/*<em>*<em>*</em>*<em>*</em>*<em>*</em>*<em>*</em>*<em>*</em>*<em>*</em>*<em>*</em>*<em>*</em>*<em>*</em>**\</em>/<strong>**以下正文</strong>我是自学数据结构，没有老师带着，刚接触数据结构中这么多关于<strong>「树的概念」</strong>的时候，也是一脸懵的状态。把书看完一遍之后，脑子里 <strong>AVL 树，红黑树，B 树，B + 树，Trie 树一团糟的状态~**</strong>先说数据结构<strong>数据结构这门课程是计算机相关专业的基础课，数据结构指的是数据在计算机中的存储、组织方式。我们在学习数据结构时候，会遇到各种各样的基础数据结构，比如堆栈、队列、数组、链表、树… 这些基本的数据结构类型有各自的特点，不同数据结构适用于解决不同场景下的问题。树形结构相比数组、链表、堆栈这些数据结构来说，稍微复杂一点点，但树形结构可以用于解决很多实际问题，因为现实世界事物之间的关系往往不是线性关联的，而「树」恰好适合描述这种非线性关系。今天就带大家一起学习下，数据结构中的各种「树」，这也是面试中经常考察的内容，手撕二叉树是常规套路，对候选人也很有区分度，看完我的这个回答，</strong>相信大家都会心中有「树」了<strong>。<br><img src="https://pic3.zhimg.com/v2-a5eb5cf0c31872d4ba4293660178aaaa_r.jpg?source=1940ef5c" alt="img"><br>从树说起什么是树？现实中的树大家都见过，在数据结构中也有树，此树非彼树，不过数据结构的树和现实中的树在形态上确实有点相像。树是非线性的数据结构，用来模拟具有树状结构性质的数据集合，它是由 n 个有限节点组成的具有层次关系的集合。在数据结构中树是非线性数据结构，那我们先来了解下，什么是线性与非线性数据结构？线性结构</strong>线性结构**是一个有序数据元素的集合。 其中数据元素之间的关系是一对一的关系，即除了第一个和最后一个数据元素之外，其它数据元素都是首尾相接的，常用的线性结构有：线性表，栈，队列，双端队列，数组，串。<br><img src="https://pic1.zhimg.com/v2-3ee77261097b14b0561610039dc2c41f_r.jpg?source=1940ef5c" alt="img"></p>
+<p><img src="https://pic2.zhimg.com/50/v2-0218d29654d19a81aa60bcc6e89b1d9f_720w.jpg?source=1940ef5c" alt="img"><br>可以想象，所谓的线性结构数据组织形式，就像一条线段一样笔直，元素之间首尾相接。比如现实中的火车进站、食堂打饭排队的队列。<br><img src="https://pic2.zhimg.com/v2-7f9c46dcec867762933a20f686d2216e_r.jpg?source=1940ef5c" alt="img"><br>非线性结构简而言之，线性结构的对立面就是<strong>非线性结构</strong>。树线性结构中节点是首位相接一对一关系，在树结构中节点之间不再是简单的一对一关系，而是较为复杂的一对多的关系，一个节点可以与多个节点发生关联，树是一种层次化的数据组织形式，树在现实中是可以找到例子的，比如现实中的族谱，亲戚之间的关系是层次关联的树形关系。数据结构中的「树」的名字由来，是因为如果把节点之间的关系直观展示出来，由于长得和现实世界中的树很像，由此得名。如图：<br><img src="https://pic3.zhimg.com/50/v2-f94f1194ecb976b050527391c875bacf_720w.jpg?source=1940ef5c" alt="img"><br>树的关键概念人们对树形结构的研究比较深入，为了方便研究树的各种性质，抽象出了一些树相关的概念，以便清晰简介的描述一颗树。下面几个基础概念必须了解，否则你当你刷 LeetCode 树相关题目时候，或者面试官向你描述问题时，你会连题目都看不懂事什么意思。先来上一个图解，下面的术语和概念对照着看，更容易理解。<br><img src="https://pica.zhimg.com/50/v2-ed1bffab5b2b8a662c057abe235b6799_720w.jpg?source=1940ef5c" alt="img"><br>什么是节点的度？度很好理解，直观来说，数一下节点有几个分叉就说这个节点的度是多少。什么是根节点？在一颗树形结构中，最顶层的那个节点就是根节点了，所有的子节点都源自它发散开来。什么是父节点？树的父子关系和现实中很相似，若一个节点含有子节点，则这个节点称为其子节点的父节点。什么是叶子节点？直观来看叶子节点都位于树的最底层，就是没有分叉的节点，严格的定义是度为 0 的节点叫叶子节点。什么是节点的高度？高度是从叶子节点开始「自底向上」逐层累加的路径长度，树叶的高度为 0（有些书上也说是 0，不用纠结）什么是节点的深度？深度是从根节点开始「自顶向下」逐层累加的路径长度，根的深度为 1（有些书上也说是 0，问题不大）小技巧：高度和深度，一个从下往上数，一个从上往下数。树的特点树形数据结构，具有以下的结构特点：每个节点都只有有限个子节点或无子节点；没有父节点的节点称为根节点；每一个非根节点有且只有一个父节点；除了根节点外，每个子节点可以分为多个不相交的子树；树里面没有环路，意思就是从一个节点出发，除非往返，否则不能回到起点。二叉树有了前面「树」的基础铺垫，二叉树是一种特殊的树，还记的上面我们学过「节点的度」吗？二叉树中每个节点的度不大于 2 ，即它的每个节点最多只有两个分支，通常称二叉树节点的左右两个分支为左右子树。二叉树是很多其他树型结构的基础结构，比如下面要讲的 AVL 树、二叉查找树，他们都是由二叉树增加一些约束条件进化而来。三种遍历方式二叉树的遍历就是逐个访问二叉树节点的数据，常见的二叉树遍历方式有三种，分别是前中后序遍历，初学者分不清这几个顺序的差别。<strong>有个简单的记忆方式，这里的「前中后」都是对于根节点而言</strong>。先访问根节点后访问左右子树的遍历方式是前序遍历，先访问左右子树最后访问根节点的遍历方式是后序遍历，先访问左子树再访问根节点最后访问右子树的遍历方式是中序遍历，下面详细说明：<br><img src="https://pic1.zhimg.com/50/v2-2f17da8d30428a899ed1f7b4500fda86_720w.jpg?source=1940ef5c" alt="img"><br>前序遍历遍历顺序是根节点 -&gt; 左子树 -&gt; 右子树遍历的得到的序列是：<code>1 2 4 5 3 6 7</code>中序遍历遍历顺序是左子树 -&gt; 根节点 -&gt; 右子树遍历的得到的序列是：<code>4 2 5 1 6 3 7</code>后序遍历遍历顺序是左子树 -&gt; 右子树 -&gt; 根节点遍历的得到的序列是：<code>4 5 2 6 7 3 1</code>二叉查找树由于最基础的二叉树节点是无序的，想象一下如果在二叉树中查找一个数据，最坏情况可能要要遍历整个二叉树，这样的查找效率是非常低下的。由于基础二叉树不利于数据的查找和插入，因此我们有必要对二叉树中的数据进行排序，所以就有了「二叉查找树」，可以说这种树是为了查找而生的二叉树，有时也称它为「二叉排序树」，都是同一种结构，只是换了个叫法。查找二叉树理解了也不难，简单来说就是二叉树上所有节点的，左子树上的节点都小于根节点，右子树上所有节点的值都大于根节点。<br><img src="https://pic1.zhimg.com/50/v2-9d960b2cb00419e06bc2a979a2f53b51_720w.jpg?source=1940ef5c" alt="img"><br>这样的结构设计，使得查找目标节点非常方便，可以通过关键字和当前节点的对比，很快就能知道目标节点在该节点的左子树还是右子树上，方便在树中搜索目标节点。如果对排序二叉树执行中序遍历，因为中序遍历的顺序是：左子树 -&gt; 根节点 -&gt; 右子树，最终可以得到一个节点值的有序列表。举个栗子：对上图的排序二叉树执行中序遍历，我们可以得到一个有序序列：<code>1 2 3 4 5 6 7</code>查询效率二叉查找树的查询复杂度取决于目标节点的深度，因此当节点的深度比较大时，最坏的查询效率是 O(n)，其中 n 是树中的节点个数。实际应用中有很多改进版的二叉查找树，目的是尽可能使得每个节点的深度不要过深，从而提高查询效率。比如 AVL 树和红黑树，可以将最坏效率降低至 O(log n)，下面我们就来看下这两种改进的二叉树。AVL 树AVL 也叫平衡二叉查找树。AVL 这个名字的由来，是它的两个发明者 G. M. Adelson-Velsky 和 Evgenii Landis 的缩写，AVL 最初是他们两人在 1962 年的论文「An algorithm for the organization of information」中提出来一种数据结构。定义AVL 树是一种平衡二叉查找树，二叉查找树我们已经知道，那平衡是什么意思呢？我们举个天平的例子，天平两端的重量要差不多才能平衡，否则就会出现向一边倾斜的情况。把这个概念迁移到二叉树中来，根节点看作是天平的中点，左子树的高度放在天平左边，右子树的高度放在天平右边，当左右子树的高度相差「不是特别多」，称为是平衡的二叉树。<br><img src="https://pic1.zhimg.com/50/v2-75c1582141d7a60b5f02a751b16e46b0_720w.jpg?source=1940ef5c" alt="img"><br>AVL 树有更严格的定义：在二叉查找树中，任一节点对应的两棵子树的最大高度差为 1，这样的二叉查找树称为平衡二叉树。其中左右子树的高度差也有个专业的叫法：平衡因子。AVL 树的旋转一旦由于插入或删除导致左右子树的高度差大于 1，此时就需要旋转某些节点调整树高度，使其再次达到平衡状态，这个过程称为旋转再平衡。<br><img src="https://pic1.zhimg.com/v2-f5e31d79bc68b55eb2bf2b4e8f732d97_r.jpg?source=1940ef5c" alt="img"><br>保持树平衡的目的是可以控制查找、插入和删除在平均和最坏情况下的时间复杂度都是 O(log n)，相比普通二叉树最坏情况的时间复杂度是 O(n) ，AVL 树把最坏情况的复杂度控制在可接受范围，非常合适对算法执行时间敏感类的应用。B 树B 树是鲁道夫 · 拜尔（Rudolf Bayer）1972 年在波音研究实验室（Boeing Research Labs）工作时发明的，关于 B 树名字的由来至今是个未解之谜，有人猜是 Bayer 的首字母，也有人说是波音实验室（Boeing Research Labs）的 Boeing 首字母缩写，虽然 B 树这个名字来源扑朔迷离，我们心里也没点 B 树，但不影响今天我们来学习它。定义一个 <em>m</em> 阶的 B 树是一个有以下属性的树每一个节点最多有 <em>m</em> 个子节点每一个非叶子节点（除根节点）最少有 ⌈<em>m</em>/2⌉ 个子节点，⌈<em>m</em>/2⌉表示向上取整。如果根节点不是叶子节点，那么它至少有两个子节点有 <em>k</em> 个子节点的非叶子节点拥有 <em>k</em> − 1 个键所有的叶子节点都在同一层如果之前不了解，相信第一眼看完定义肯定是蒙圈，不过多看几遍好好理解一下就好了，画个图例，对照着看看：<br><img src="https://pic1.zhimg.com/50/v2-650390e1bd4a952cc6232c5c46208e5d_720w.jpg?source=1940ef5c" alt="img"><br>特点B 树是所有节点的平衡因子均等于 0 的多路查找树（AVL 树是平衡因子不大于 1 的二路查找树）。B 树节点可以保存多个数据，使得 B 树可以不用像 AVL 树那样为了保持平衡频繁的旋转节点。B 树的多路的特性，降低了树的高度，所以 B 树相比于平衡二叉树显得矮胖很多。B 树非常适合保存在磁盘中的数据读取，因为每次读取都会有一次磁盘 IO，高度降低减少了磁盘 IO 的次数。B 树常用于实现数据库索引，典型的实现，MongoDB 索引用 B 树实现，MySQL 的 Innodb 存储引擎用 B + 树存放索引。说到 B 树不得不提起它的好兄弟 B + 树，不过这里不展开细说，只需知道，B + 树是对 B 树的改进，数据都放在叶子节点，非叶子节点只存数据索引。红黑树红黑树也是一种特殊的「二叉查找树」。到目前为止我们学习的 AVL 树和即将学习的红黑树都是二叉查找树的变体，可见二叉查找树真的是非常重要基础二叉树，如果忘了它的定义可以先回头看看。特点红黑树中每个结点都被标记了红黑属性，红黑树除了有普通的「二叉查找树」特性之外，还有以下的特征：节点是红色或黑色。根是黑色。所有叶子都是黑色（叶子是 NIL 节点）。每个红色节点必须有两个黑色的子节点。（从每个叶子到根的所有路径上不能有两个连续的红色节点。）从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点。这些性质有兴趣可以自行研究，不过，现在你只需要知道，这些约束确保了红黑树的关键特性：从根到叶子的最长的可能路径不多于最短的可能路径的两倍长。<br><img src="https://pic3.zhimg.com/v2-4f79124bb9f59d429f5679102ae7fef6_r.jpg?source=1940ef5c" alt="img"><br>而节点的路径长度决定着对节点的查询效率，这样我们确保了，最坏情况下的查找、插入、删除操作的时间复杂度不超过 O(log n)，并且有较高的插入和删除效率。应用场景红黑树在实际应用中比较广泛，有很多已经落地的实践，比如学习 C++ 的同学都知道会接触到 STL 标准库，而 STL 容器中的 map、set、multiset、multimap 底层实现都是基于红黑树。再比如，Linux 内核中也有红黑树的实现，Linux 系统在实现 EXT3 文件系统、虚拟内存管理系统，都有使用到红黑树这种数据结构。Linux 内核中的红黑树定义在内核文件如下的位置：<br><img src="https://pic3.zhimg.com/v2-0ec841c6176da9160c2c4faa6f364385_r.jpg?source=1940ef5c" alt="img"><br>如果找不到，可以 <code>find / -name rbtree.h</code> 搜索一下即可，有兴趣可以打开文件看下具体实现。红黑树 VS 平衡二叉树（AVL 树）插入和删除操作，一般认为红黑树的删除和插入会比 AVL 树更快。因为，红黑树不像 AVL 树那样严格的要求平衡因子小于等于 1，这就减少了为了达到平衡而进行的旋转操作次数，可以说是牺牲严格平衡性来换取更快的插入和删除时间。红黑树不要求有不严格的平衡性控制，但是红黑树的特点，使得任何不平衡都会在三次旋转之内解决。而 AVL 树如果不平衡，并不会控制旋转操作次数，旋转直到平衡为止。查找操作，AVL 树的效率更高。因为 AVL 树设计比红黑树更加平衡，不会出现平衡因子超过 1 的情况，减少了树的平均搜索长度。Trie 树（前缀树或字典树）Trie 来源于单词 retrieve（检索），Trie 树也称为前缀树或字典树。利用字符串前缀来查找指定的字符串，缩短查找时间提高查询效率，主要用于字符串的快速查找和匹配。为什么要称其为字典树呢？因为 Trie 树的功能就像字典一样，想象一下查英文字典，我们会根据首字母找到对应的页码，接着根据第二、第三… 个单词，逐步查找到目标单词，Trie 树的组织思想和字典组织很像，字典树由此得名。<br><img src="https://pic2.zhimg.com/v2-e884d9b5b91500ac8ecfbe8bcfe3be60_r.jpg?source=1940ef5c" alt="img"><br>定义Trie 的核心思想是空间换时间，有 3 个基本性质：根节点不包含字符，除根节点外每一个节点都只包含一个字符。从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串。每个节点的所有子节点包含的字符都不相同。比如对单词序列<code>lru, lua, mem, mcu</code> 建立 Trie 树如下：<br><img src="https://pic1.zhimg.com/50/v2-2de31d5fbc9262f4f4009da02258d49c_720w.jpg?source=1940ef5c" alt="img"><br>Trie 树建立和查询是可以同步进行的，可以在还没建立出完成的 Trie 树之前就找到目标数据，而如果用 Hash 表等结构存储是需要先建立完成表才能开始查询，这也是 Trie 树查询速度快的原因。应用Trie 树还用于搜索引擎的关键词提示功能。比如当你在搜索框中输入检索单词的开头几个字，搜索引擎就可以自动联想匹配到可能的词组出来，这正是 Trie 树的最直接应用。<br><img src="https://pic2.zhimg.com/v2-36fc12137f84953fe95b49e5fc095768_r.jpg?source=1940ef5c" alt="img"><br>这种结构在海量数据查询上很有优势，因为不必为了找到目标数据遍历整个数据集合，只需按前缀遍历匹配的路径即可找到目标数据。因此，Trie 树还可用于解决类似以下的面试题：给你 100000 个长度不超过 10 的单词。对于每一个单词，我们要判断他出没出现过，如果出现了，求第一次出现在第几个位置。<br>有一个 1G 大小的一个文件，里面每一行是一个词，词的大小不超过 16 字节，内存限制大小是 1M，求频数最高的 100 个词<br>1000 万字符串，其中有些是重复的，需要把重复的全部去掉，保留没有重复的字符串，请问怎么设计和实现？<br>一个文本文件，大约有一万行，每行一个词，要求统计出其中最频繁出现的前 10 个词，请给出思想，给出时间复杂度分析。总结一下树形数据结构有许多变种，这篇文章我们从树开始，把几种常见树形数据结构学习了一遍，包括二叉树、二叉查找树（二叉搜索树）、AVL 树、红黑树、B 树、Trie 树。，因为数据结构中各种树的变体非常多，一篇文章实难细数，篇幅有限，也只能说是浅尝辄止，作为树形数据结构入门，如果要深入的学习，每个知识点还能写出一篇文章，比如 B+ 树原理及其在数据库索引中的应用、红黑树的详细分析等等，这次柠檬只是粗略带大家走一遍。在后端开发中，数据结构与算法是后端程序员的基本素养，除了基础架构部的后端开发同学，虽然我们平常不会经常造轮子，但是掌握基本的数据结构与算法仍然是非常有必要，面试也对相关能力有要求。学习算法和数据结构不仅能提高自身编程能力，关键是现在大厂面试几乎都要让你写几道算法题，我找到<strong>一本谷歌大神的 LeetCode 刷题笔记</strong>，总结出算法刷题套路、条理清晰，BAT 刷题必备：<a href="https://zhuanlan.zhihu.com/p/336587820" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/336587820​zhuanlan.zhihu.com<img src="https://pic2.zhimg.com/v2-1f4501045c33082f75a0cbd5f7167509_ipico.jpg" alt="img"></a><strong>说了这么多，其实最务实的学习方式是读书</strong>！从事软件行业这么些年，开始也有迷茫不知方向，也不懂要看啥书学些什么内容，为了避免这样的问题，我整理了程序员进阶书单，让你少走些弯路。<a href="https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s/FG0EPNRt3suOFPeLtvmvEw">月薪 30K 的程序员都学啥？附书单​mp.weixin.qq.com</a><strong>我目前的工作是某大厂 C++ 后台开发</strong>，<strong>术业有专攻</strong>，如果你看到这，一定要看下我这篇 1 万 5 千字的后端开发完全学习指南，一定让你有收获！<a href="https://www.zhihu.com/question/24952874/answer/1602200603" target="_blank" rel="noopener">后端都要学习什么？​www.zhihu.com<img src="https://pic2.zhimg.com/v2-1cd22f48113342835d46aa9a34da826d_120x160.jpg" alt="img"></a>说到 C++ 的话，我长期在知乎分享 C++ 学习相关，有些经验分享，你看下对你是否有用，有帮助的话点个赞同呗（疯狂暗示哈哈）<a href="https://www.zhihu.com/question/27950576/answer/1763043840" target="_blank" rel="noopener">C++ 研发实习生面试通常会被问到什么问题？​www.zhihu.com<img src="https://pic3.zhimg.com/v2-2656cca49526004e1b6b1a28b783203a_120x160.jpg" alt="img"></a><a href="https://www.zhihu.com/question/30315894/answer/1574277687" target="_blank" rel="noopener">Visual Studio Code 如何编写运行 C、C++ 程序？​www.zhihu.com<img src="https://pic4.zhimg.com/v2-8bd23dab284354d118e91a95fd3a9843_180x120.jpg" alt="img"></a><a href="https://www.zhihu.com/question/435206521/answer/1681193532" target="_blank" rel="noopener">寒假 45 天如何自学入门 C++?​www.zhihu.com<img src="https://pic2.zhimg.com/v2-5f8dd51395bec53552651e67d23213dd_180x120.jpg" alt="img"></a><a href="https://www.zhihu.com/question/23933514/answer/1662670344" target="_blank" rel="noopener">用一年时间如何能掌握 C++ ？​www.zhihu.com<img src="https://pic3.zhimg.com/v2-f7d74bd59d0b68f0a53de1fe7205bd0e_120x160.jpg" alt="img"></a><a href="https://www.zhihu.com/question/400450117/answer/1760556292" target="_blank" rel="noopener">能不能推荐几本 c++ 的书？​www.zhihu.com<img src="https://pic2.zhimg.com/v2-41d3bb56ac9197a5ad420dade2b28d3d_120x160.jpg" alt="img"></a><strong>更多干货文章，关注我的专栏：</strong><a href="https://www.zhihu.com/column/c_1326224372755771392" target="_blank" rel="noopener">学编程，涨工资​www.zhihu.com<img src="https://pic2.zhimg.com/v2-b6546a28845e426a25b971ce7fcab919_ipico.jpg" alt="img"></a>/<strong>**</strong>20210307 更新 <strong>***</strong>金三银四跳槽面试季，整理了 68 个 C++ 常见面试题，希望对看到这篇文章的同学有帮助，offer 拿到手软！<a href="https://zhuanlan.zhihu.com/p/346821046" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/346821046​zhuanlan.zhihu.com<img src="https://pic3.zhimg.com/v2-1a4f94e73f4a6600b57b698fca90e76e_ipico.jpg" alt="img"></a><strong>我是</strong><a href="https://www.zhihu.com/people/5d04cc04c7454c02e398bdeba909143b" target="_blank" rel="noopener">@程序员柠檬</a><strong>关注我，学习更多编程知识</strong>！</p>
+<p>/<strong><strong>****</strong></strong>20210122 更新** <strong><strong>***</strong></strong>/</p>
+<p><strong>收藏 900+ 点赞 300+</strong></p>
+<p><strong>原创分享，码字不易，如果回答对你有帮助，各位在收藏之前点个赞同感谢，或分享给更多需要的小伙伴呗~</strong></p>
+<p><img src="https://pic1.zhimg.com/885ebd3739f06ea6a3f776f8b9f3fdcd_xs.jpg?source=1940ef5c" alt="img"></p>
+<p>郁白</p>
+<p>已有的几个答案都是从算法角度分析的，我尝试分析下从工程角度区分红黑树与 b + 树的应用场景，红黑树一个 node 只存一对 kv，因此可以使用类似嵌入式链表的方式实现，数据结构本身不管理内存，比较轻量级，使用更灵活也更省内存，比如一个 node 可以同时存在若干个树或链表中，内核中比较常见。而 b + 树由于每个 node 要存多对 kv，node 结构的内存一般就要由数据结构自己来管，是真正意义上的 container，相对嵌入式方法实现的红黑树，好处是用法简单，自己管理内存更容易做 lockfree，一个 node 存多对 kv 的方式 cpu cache 命中率更高，所以用户态实现的高并发索引一般还是选 b + 树。再说 b 树与 b + 树，btree 的中间节点比 b + 树多存了 value，同样出度的情况下，node 更大，相对来说 cpu cache 命中率是不如 b + 树的。另外再提一句，b + 树的扫描特性（链表串起来的叶子节点）在无锁情况下是很难做的（我还没见到过解法），因此我目前见到的无锁 b + 树叶子节点都是不串起来的。补充下，关于相同前缀的优化存储和优化查询 b + 树也可以做的。</p>
+
+      
+    </div>
+    
+    
+    
+    
+       <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------</div>
+
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/06/ssrf/" rel="next" title="ssrf">
+                <i class="fa fa-chevron-left"></i> ssrf
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E5%82%A8%E5%92%8C%E8%AF%BB%E5%8F%96/" rel="prev" title="数据库存储和读取">
+                数据库存储和读取 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Ran Binkesi" />
+          <p class="site-author-name" itemprop="name">Ran Binkesi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran Binkesi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

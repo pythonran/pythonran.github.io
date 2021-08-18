@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="设计模式," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/%5Bobject%20Object%5D?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="三种最基本的设计模式：  创建模式，提供实例化的方法，为适合的状况提供相应的对象创建方法。 结构化模式，通常用来处理实体之间的关系，使得这些实体能够更好地协同工作。 行为模式，用于在不同的实体建进行通信，为实体之间的通信提供更容易，更灵活的通信方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式">
+<meta property="og:url" content="http://yoursite.com/2021/07/20/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="小楼一夜醉酒">
+<meta property="og:description" content="三种最基本的设计模式：  创建模式，提供实例化的方法，为适合的状况提供相应的对象创建方法。 结构化模式，通常用来处理实体之间的关系，使得这些实体能够更好地协同工作。 行为模式，用于在不同的实体建进行通信，为实体之间的通信提供更容易，更灵活的通信方法。">
+<meta property="article:published_time" content="2021-07-20T06:07:06.577Z">
+<meta property="article:modified_time" content="2021-08-18T07:14:46.218Z">
+<meta property="article:author" content="Ran Binkesi">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/20/设计模式/"/>
+
+
+
+
+
+  <title>设计模式 | 小楼一夜醉酒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="小楼一夜醉酒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小楼一夜醉酒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/20/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ran Binkesi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小楼一夜醉酒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-20T14:07:06+08:00">
+                2021-07-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2.6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>三种最基本的设计模式：</strong></p>
+<ol>
+<li>创建模式，提供实例化的方法，为适合的状况提供相应的对象创建方法。</li>
+<li>结构化模式，通常用来处理实体之间的关系，使得这些实体能够更好地协同工作。</li>
+<li>行为模式，用于在不同的实体建进行通信，为实体之间的通信提供更容易，更灵活的通信方法。<a id="more"></a></li>
+</ol>
+<p><strong>设计模式的六大原则</strong></p>
+<ol>
+<li>开闭原则：一个软件实体如类、模块和函数应该对扩展开放，对修改关闭。即软件实体应尽量在不修改原有代码的情况下进行扩展。</li>
+<li>里氏（Liskov）替换原则：所有引用基类（父类）的地方必须能透明地使用其子类的对象。</li>
+<li>依赖倒置原则：高层模块不应该依赖低层模块，二者都应该依赖其抽象；抽象不应该依赖细节；细节应该依赖抽象。换言之，要针对接口编程，而不是针对实现编程。</li>
+<li>接口隔离原则：使用多个专门的接口，而不使用单一的总接口，即客户端不应该依赖那些它不需要的接口。</li>
+<li>迪米特法则：一个软件实体应当尽可能少地与其他实体发生相互作用。</li>
+<li>单一职责原则：不要存在多于一个导致类变更的原因。通俗的说，即一个类只负责一项职责。</li>
+</ol>
+<h4><span id="创建型模式">创建型模式</span></h4><ol>
+<li>单例模式<br>单例模式（Singleton Pattern）目的是确保某一个类只有一个实例存在。<br>实现单例有多种方法：装饰器，<em><em>new</em></em>, metaClass， import<br>每一个 python 模块都是天生的单例模式</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">### 单例模式</span><br><span class="line">class Singleton(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def __new__(cls, *args, **kwargs):</span><br><span class="line">        if not hasattr(cls, &#39;_instance&#39;):</span><br><span class="line">            cls._instance &#x3D; object.__new__(cls)</span><br><span class="line">        return cls._instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ob_1 &#x3D; Singleton()</span><br><span class="line">ob_2 &#x3D; Singleton()</span><br><span class="line">print(id(ob_1), id(ob_2))</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>工厂模式<br>当以下情形可以使用工厂模式：<br>\1. 不知道用户想要创建什么样的对象<br>\2. 当你想要创建一个可扩展的关联在创建类与支持创建对象的类之间。<br>工厂模式有很多种实现类型，下面只介绍一种工厂方法模式</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">### 工厂模式</span><br><span class="line">class Person:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.name &#x3D; None</span><br><span class="line">        self.gender &#x3D; None</span><br><span class="line">        </span><br><span class="line">    def getName(self):</span><br><span class="line">        return self.name</span><br><span class="line"></span><br><span class="line">    def getGender(self):</span><br><span class="line">        return self.gender</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Male(Person):</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        super().__init__()</span><br><span class="line">        print(f&#39;Mr.&#123;name&#125;&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Female(Person):</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        super().__init__()</span><br><span class="line">        print(f&quot;Miss.&#123;name&#125;&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class PersonFactory:</span><br><span class="line">    @staticmethod</span><br><span class="line">    def getPerson(name, gender):</span><br><span class="line">        if gender &#x3D;&#x3D; &quot;M&quot;:</span><br><span class="line">            return Male(name)</span><br><span class="line">        if gender &#x3D;&#x3D; &quot;F&quot;:</span><br><span class="line">            return Female(name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ob_1 &#x3D; PersonFactory.getPerson(&quot;big&quot;, &quot;M&quot;)</span><br><span class="line">ob_2 &#x3D; PersonFactory.getPerson(&quot;bigTwo&quot;, &quot;F&quot;)</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>原型模式<br>用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。<br>浅拷贝（Shallow Copy）: 指对象的字段被拷贝，而字段引用的对象不会被拷贝，拷贝的对象和源对象只是名称相同，但是他们共用一个实体。<br>深拷贝（deep copy）: 对对象实例中字段引用的对象也进行拷贝。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">### 原型模式</span><br><span class="line">import copy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Book:</span><br><span class="line">    def __init__(self, *args, **kwargs):</span><br><span class="line">        self.__dict__.update(kwargs)</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return str(sorted(self.__dict__.items()))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ProtoType:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.objects &#x3D; dict()</span><br><span class="line"></span><br><span class="line">    def register(self, nid, obj):</span><br><span class="line">        self.objects[nid] &#x3D; obj</span><br><span class="line"></span><br><span class="line">    def unregister(self, nid):</span><br><span class="line">        del self.objects[nid]</span><br><span class="line"></span><br><span class="line">    def clone(self, nid, **attr):</span><br><span class="line">        found &#x3D; self.objects.get(nid)</span><br><span class="line">        if not found:</span><br><span class="line">            raise ValueError(f&quot;&#123;nid&#125; No exist&quot;)</span><br><span class="line">        obj &#x3D; copy.deepcopy(found)</span><br><span class="line">        obj.__dict__.update(attr)</span><br><span class="line">        return obj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">b_1 &#x3D; Book(&quot;aaa&quot;, k&#x3D;&quot;kkk&quot;, b&#x3D;&quot;bbb&quot;)</span><br><span class="line">prototype &#x3D; ProtoType()</span><br><span class="line">prototype.register(&quot;b_1&quot;, b_1)</span><br><span class="line">b_2 &#x3D; prototype.clone(&quot;b_1&quot;, e&#x3D;&quot;eee&quot;, d&#x3D;&quot;ddd&quot;)</span><br><span class="line">print(b_1)</span><br><span class="line">print(b_2)</span><br><span class="line">print(id(b_1))</span><br><span class="line">print(id(b_2))</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>建造者模式<br>包括一个限定方法抽象类，多个实际建造者类，一个指挥者类<br>以下情况适用：<br>\1. 当创建复杂对象的算法（Director）应该独立于该对象的组成部分以及它们的装配方式（Builder）时<br>\2. 当构造过程允许被构造的对象有不同的表示时（不同 Builder）。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">### 建造者模式</span><br><span class="line">from abc import ABCMeta, abstractmethod</span><br><span class="line"></span><br><span class="line">class Builder:</span><br><span class="line">    _metaClass_ &#x3D; ABCMeta</span><br><span class="line"></span><br><span class="line">    @abstractmethod</span><br><span class="line">    def draw_body(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class FatCreator(Builder):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    def draw_body(self):</span><br><span class="line">        print(f&#39;画胖子&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ThinCreator(Builder):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def draw_body(self):</span><br><span class="line">        print(f&#39;画瘦子&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Director:</span><br><span class="line">    def __init__(self, obj):</span><br><span class="line">        self.obj &#x3D; obj</span><br><span class="line"></span><br><span class="line">    def draw(self):</span><br><span class="line">        self.obj.draw_body()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fat &#x3D; FatCreator()</span><br><span class="line">Director(fat).draw()</span><br></pre></td></tr></table></figure>
+
+
+
+<h4><span id="结构型模式">结构型模式</span></h4><ol>
+<li>适配器模式<br>所谓适配器模式是指是一种接口适配技术，它可通过某个类来使用另一个接口与之不兼容的类，运用此模式，两个类的接口都无需改动。</li>
+</ol>
+<p>适配器模式主要应用于希望复用一些现存的类，但是接口又与复用环境要求不一致的情况，比如在需要对早期代码复用一些功能等应用上很有实际价值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">### 适配器模式</span><br><span class="line">class Target:</span><br><span class="line">    def request(self):</span><br><span class="line">        print(&quot;普通请求&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Adaptee:</span><br><span class="line">    def special_request(self):</span><br><span class="line">        print(&quot;特殊请求&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Adapter(Target):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.adaptee &#x3D; Adaptee()</span><br><span class="line"></span><br><span class="line">    def request(self):</span><br><span class="line">        self.adaptee.special_request()</span><br><span class="line"></span><br><span class="line">target&#x3D; Adapter()</span><br><span class="line">target.request()</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>修饰器模式<br>Python 种经典的模式，用来拓展类的功能</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">### 装饰器模式</span><br><span class="line">import functools</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def memoize(fn):</span><br><span class="line">    know &#x3D; dict()</span><br><span class="line">    @functools.wraps(fn)</span><br><span class="line">    def memoizer(*args):</span><br><span class="line">        if args not in know:</span><br><span class="line">            know[args] &#x3D; fn(*args)</span><br><span class="line">        return know[args]</span><br><span class="line">    return memoizer</span><br><span class="line"></span><br><span class="line">@memoize</span><br><span class="line">def nsum(n):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    返回前那个数的和</span><br><span class="line">    :param n:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    assert (n &gt;&#x3D; 0), &#39;n must be &gt;&#x3D; 0&#39;</span><br><span class="line">    return 0 if n &#x3D;&#x3D; 0 else n + nsum(n-1)</span><br><span class="line"></span><br><span class="line">@memoize</span><br><span class="line">def fibonacci(n):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    返回斐波那契数列的第n个数</span><br><span class="line">    :param n:</span><br><span class="line">    :return:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    assert n &gt;&#x3D; 0 and isinstance(n, int), &#39;n must be int and &gt;&#x3D; 0&#39;</span><br><span class="line">    return n if n in (0, 1) else fibonacci(n-1) + fibonacci(n-2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">from timeit import Timer</span><br><span class="line">measure &#x3D; [&#123;&#39;exec&#39;: &#39;fibonacci(100)&#39;, &#39;import&#39;: &#39;fibonacci&#39;, &#39;func&#39;: fibonacci&#125;,</span><br><span class="line">            &#123;&#39;exec&#39;: &#39;nsum(10)&#39;, &#39;import&#39;: &#39;nsum&#39;, &#39;func&#39;: nsum&#125;]</span><br><span class="line">for m in measure:</span><br><span class="line">    t &#x3D; Timer(f&#39;&#123;m[&quot;exec&quot;]&#125;&#39;, f&#39;from __main__ import &#123;m[&quot;import&quot;]&#125;&#39;)</span><br><span class="line">    print(&#39;name: &#123;&#125; \ndoc: &#123;&#125; \nexecuting: &#123;&#125; \n time:&#123;&#125;&#39;.format(m[&#39;func&#39;].__name__, m[&#39;func&#39;].__doc__, m[&#39;exec&#39;], t.timeit()))</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>享元模式<br>运用共享技术有效地支持大量细粒度的对象。<br>内部状态：享元对象中不会随环境改变而改变的共享部分。比如围棋棋子的颜色。<br>外部状态：随环境改变而改变、不可以共享的状态就是外部状态。比如围棋棋子的位置。</li>
+</ol>
+<p>应用场景：程序中使用了大量的对象，如果删除对象的外部状态，可以用相对较少的共享对象取代很多组对象，就可以考虑使用享元模式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">### 享元模式</span><br><span class="line">class Tree(object):</span><br><span class="line">    obj_pool &#x3D; &#123;&#125;</span><br><span class="line">     </span><br><span class="line">    def __new__(cls, tree_type):</span><br><span class="line">        if tree_type not in cls.obj_pool:</span><br><span class="line">            obj &#x3D; object.__new__(cls)</span><br><span class="line">            cls.obj_pool[tree_type] &#x3D; obj</span><br><span class="line">            obj.tree_type &#x3D; tree_type</span><br><span class="line">        return cls.obj_pool[tree_type]</span><br><span class="line"></span><br><span class="line">    def render(self, age):</span><br><span class="line">        print(f&#39;&#123;self.tree_type&#125;: age: &#123;age&#125;&#39;)</span><br><span class="line"></span><br><span class="line">    # obj_list &#x3D; []</span><br><span class="line"></span><br><span class="line">    # def __init__(self, tree_type):</span><br><span class="line">    #     self.tree_type &#x3D; tree_type</span><br><span class="line">        # self.get_obj()</span><br><span class="line"></span><br><span class="line">    # @classmethod</span><br><span class="line">    # def get_obj(cls):</span><br><span class="line">    #     cls.obj_list.append(cls.__new__(cls))</span><br><span class="line"></span><br><span class="line">from random import randint</span><br><span class="line">for _ in range(10):</span><br><span class="line">    a &#x3D; &quot;apple&quot;</span><br><span class="line">    t1 &#x3D; Tree(a)</span><br><span class="line">    t1.render(randint(10, 50))</span><br><span class="line">for _ in range(5):</span><br><span class="line">    t2 &#x3D; Tree(&quot;cherry&quot;)</span><br><span class="line">    t2.render(randint(10, 50))</span><br><span class="line"></span><br><span class="line">for _ in range(3):</span><br><span class="line">    t3 &#x3D; Tree(&quot;peach&quot;)</span><br><span class="line">    t3.render(randint(10, 50))</span><br><span class="line"> </span><br><span class="line"> print(len(Tree.obj_pool))</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>外观模式<br>外观模式又叫做门面模式。在面向对象程序设计中，解耦是一种推崇的理念。但事实上由于某些系统中过于复杂，从而增加了客户端与子系统之间的耦合度。例如：在家观看多媒体影院时，更希望按下一个按钮就能实现影碟机，电视，音响的协同工作，而不是说每个机器都要操作一遍。这种情况下可以采用外观模式，即引入一个类对子系统进行包装，让客户端与其进行交互。</li>
+</ol>
+<p>外观模式 (Facade Pattern)：外部与一个子系统的通信必须通过一个统一的外观对象进行，为子系统中的一组接口提供一个一致的界面，外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。外观模式又称为门面模式，它是一种对象结构型模式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">from enum import Enum</span><br><span class="line">from abc import ABCMeta, abstractmethod</span><br><span class="line"></span><br><span class="line">State &#x3D; Enum(&#39;State&#39;, &#39;new running sleeping restart zombie&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class User:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Process:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class File:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Server(metaclass&#x3D;ABCMeta):</span><br><span class="line">    @abstractmethod</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.name</span><br><span class="line"></span><br><span class="line">    @abstractmethod</span><br><span class="line">    def boot(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @abstractmethod</span><br><span class="line">    def kill(self, restart&#x3D;True):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class FileServer(Server):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        &#39;&#39;&#39;初始化文件服务进程要求的操作&#39;&#39;&#39;</span><br><span class="line">        self.name &#x3D; &#39;FileServer&#39;</span><br><span class="line">        self.state &#x3D; State.new</span><br><span class="line"></span><br><span class="line">    def boot(self):</span><br><span class="line">        print(&#39;booting the &#123;&#125;&#39;.format(self))</span><br><span class="line">        &#39;&#39;&#39;启动文件服务进程要求的操作&#39;&#39;&#39;</span><br><span class="line">        self.state &#x3D; State.running</span><br><span class="line"></span><br><span class="line">    def kill(self, restart&#x3D;True):</span><br><span class="line">        print(&#39;Killing &#123;&#125;&#39;.format(self))</span><br><span class="line">        &#39;&#39;&#39;终止文件服务进程要求的操作&#39;&#39;&#39;</span><br><span class="line">        self.state &#x3D; State.restart if restart else State.zombie</span><br><span class="line"></span><br><span class="line">    def create_file(self, user, name, permissions):</span><br><span class="line">        &#39;&#39;&#39;检查访问权限的有效性、用户权限等&#39;&#39;&#39;</span><br><span class="line">        print(&quot;trying to create the file &#39;&#123;&#125;&#39; for user &#39;&#123;&#125;&#39; with permissions&#123;&#125;&quot;.format(name, user, permissions))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ProcessServer(Server):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        &#39;&#39;&#39;初始化进程服务进程要求的操作&#39;&#39;&#39;</span><br><span class="line">        self.name &#x3D; &#39;ProcessServer&#39;</span><br><span class="line">        self.state &#x3D; State.new</span><br><span class="line"></span><br><span class="line">    def boot(self):</span><br><span class="line">        print(&#39;booting the &#123;&#125;&#39;.format(self))</span><br><span class="line">        &#39;&#39;&#39;启动进程服务进程要求的操作&#39;&#39;&#39;</span><br><span class="line">        self.state &#x3D; State.running</span><br><span class="line"></span><br><span class="line">    def kill(self, restart&#x3D;True):</span><br><span class="line">        print(&#39;Killing &#123;&#125;&#39;.format(self))</span><br><span class="line">        &#39;&#39;&#39;终止进程服务进程要求的操作&#39;&#39;&#39;</span><br><span class="line">        self.state &#x3D; State.restart if restart else State.zombie</span><br><span class="line"></span><br><span class="line">    def create_process(self, user, name):</span><br><span class="line">        &#39;&#39;&#39;检查用户权限和生成PID等&#39;&#39;&#39;</span><br><span class="line">        print(&quot;trying to create the process &#39;&#123;&#125;&#39; for user &#39;&#123;&#125;&#39;&quot;.format(name, user))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class WindowServer:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class NetworkServer:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OperatingSystem:</span><br><span class="line">    &#39;&#39;&#39;外观&#39;&#39;&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.fs &#x3D; FileServer()</span><br><span class="line">        self.ps &#x3D; ProcessServer()</span><br><span class="line"></span><br><span class="line">    def start(self):</span><br><span class="line">        [i.boot() for i in (self.fs, self.ps)]</span><br><span class="line"></span><br><span class="line">    def create_file(self, user, name, permissions):</span><br><span class="line">        return self.fs.create_file(user, name, permissions)</span><br><span class="line"></span><br><span class="line">    def create_process(self, user, name):</span><br><span class="line">        return self.ps.create_process(user, name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    os &#x3D; OperatingSystem()</span><br><span class="line">    os.start()</span><br><span class="line">    os.create_file(&#39;foo&#39;, &#39;hello&#39;, &#39;-rw-r-r&#39;)</span><br><span class="line">    os.create_process(&#39;bar&#39;, &#39;ls &#x2F;tmp&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>全文完</p>
+<p>本文由 <a href="http://ksria.com/simpread" target="_blank" rel="noopener">简悦 SimpRead</a> 优化，用以提升阅读体验</p>
+<p>使用了 全新的简悦词法分析引擎 beta，<a href="http://ksria.com/simpread/docs/#/词法分析引擎" target="_blank" rel="noopener">点击查看</a>详细说明</p>
+<p><a href="https://blog.csdn.net/qq_44484910/article/details/107892976#sr-toc-0" target="_blank" rel="noopener">创建型模式</a><a href="https://blog.csdn.net/qq_44484910/article/details/107892976#sr-toc-1" target="_blank" rel="noopener">结构型模式</a></p>
+
+      
+    </div>
+    
+    
+    
+    
+       <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------</div>
+
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/15/zookeeper%20watch%E6%9C%BA%E5%88%B6/" rel="next" title="zookeeper watch机制">
+                <i class="fa fa-chevron-left"></i> zookeeper watch机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/20/XSS%20%E6%BC%8F%E6%B4%9E/" rel="prev" title="XSS 漏洞">
+                XSS 漏洞 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Ran Binkesi" />
+          <p class="site-author-name" itemprop="name">Ran Binkesi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建型模式"><span class="nav-number">1.</span> <span class="nav-text">创建型模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构型模式"><span class="nav-number">2.</span> <span class="nav-text">结构型模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran Binkesi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

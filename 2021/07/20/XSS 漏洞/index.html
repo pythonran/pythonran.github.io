@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Web攻击,XSS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/%5Bobject%20Object%5D?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="跨站脚本漏洞 (XSS) 基础讲解  XSS 漏洞一、文章简介XSS 漏洞是 Web 应用程序中最常见的漏洞之一。如果您的站点没有预防 XSS 漏洞的固定方法，那么很可能就存在 XSS 漏洞。这篇文章将带你通过代码层面去理解三个问题：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XSS 漏洞">
+<meta property="og:url" content="http://yoursite.com/2021/07/20/XSS%20%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="小楼一夜醉酒">
+<meta property="og:description" content="跨站脚本漏洞 (XSS) 基础讲解  XSS 漏洞一、文章简介XSS 漏洞是 Web 应用程序中最常见的漏洞之一。如果您的站点没有预防 XSS 漏洞的固定方法，那么很可能就存在 XSS 漏洞。这篇文章将带你通过代码层面去理解三个问题：">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-834e76bc8c471138.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-aff389d031433dce.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-e74b7a5448e51311.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-60cffe4d6cd992aa.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-909939f59402f6b7.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-4b3951ff10f4d8df.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-07ab49e8b1ea148a.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-01d967d16884959b.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-75db875d30a09d1b.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-481b85eeb80c2726.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-9b17baa60cba0d96.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-b0177ceb2ba27531.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-f8821c2140b06378.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-678390ac7147eb2b.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-038c78407caae5d2.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-4a47fed989a18325.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6230889-0b0257806e619f56.png">
+<meta property="article:published_time" content="2021-07-20T06:08:11.337Z">
+<meta property="article:modified_time" content="2021-08-18T07:14:05.787Z">
+<meta property="article:author" content="Ran Binkesi">
+<meta property="article:tag" content="Web攻击">
+<meta property="article:tag" content="XSS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6230889-834e76bc8c471138.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/20/XSS 漏洞/"/>
+
+
+
+
+
+  <title>XSS 漏洞 | 小楼一夜醉酒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="小楼一夜醉酒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小楼一夜醉酒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/20/XSS%20%E6%BC%8F%E6%B4%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ran Binkesi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小楼一夜醉酒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">XSS 漏洞</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-20T14:08:11+08:00">
+                2021-07-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>跨站脚本漏洞 (XSS) 基础讲解</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-834e76bc8c471138.png" alt="img"></p>
+<h1><span id="xss-漏洞">XSS 漏洞</span></h1><h2><span id="一-文章简介">一、文章简介</span></h2><p>XSS 漏洞是 Web 应用程序中最常见的漏洞之一。如果您的站点没有预防 XSS 漏洞的固定方法，那么很可能就存在 XSS 漏洞。<br>这篇文章将带你通过代码层面去理解三个问题：</p>
+<a id="more"></a>
+
+
+<ul>
+<li>什么是 XSS 漏洞？</li>
+<li>XSS 漏洞有哪些分类？</li>
+<li>如何防范 XSS 漏洞？</li>
+</ul>
+<h2><span id="二-xss-漏洞简介">二、XSS 漏洞简介</span></h2><p>跨站脚本攻击是指恶意攻击者往 Web 页面里插入恶意 Script 代码，当用户浏览该页之时，嵌入其中 Web 里面的 Script 代码会被执行，从而达到恶意攻击用户的目的。<br>xss 漏洞通常是通过 php 的输出函数将 javascript 代码输出到 html 页面中，通过用户本地浏览器执行的，所以 xss 漏洞关键就是<strong>寻找参数未过滤的输出函数</strong>。<br>常见的输出函数有： <code>echo printf print print_r sprintf die var-dump var_export</code>.</p>
+<p><strong>xss 分类：（三类）</strong></p>
+<ul>
+<li>反射型 XSS：<strong>&lt;非持久化&gt;</strong> 攻击者事先制作好攻击链接, 需要欺骗用户自己去点击链接才能触发 XSS 代码（服务器中没有这样的页面和内容），一般容易出现在搜索页面。</li>
+<li>存储型 XSS：<strong>&lt;持久化&gt;</strong> 代码是存储在服务器中的，如在个人信息或发表文章等地方，加入代码，如果没有过滤或过滤不严，那么这些代码将储存到服务器中，每当有用户访问该页面的时候都会触发代码执行，这种 XSS 非常危险，容易造成蠕虫，大量盗窃 cookie（虽然还有种 DOM 型 XSS，但是也还是包括在存储型 XSS 内）。</li>
+<li>DOM 型 XSS：基于文档对象模型 Document Objeet Model，DOM) 的一种漏洞。DOM 是一个与平台、编程语言无关的接口，它允许程序或脚本动态地访问和更新文档内容、结构和样式，处理后的结果能够成为显示页面的一部分。DOM 中有很多对象，其中一些是用户可以操纵的，如 uRI ，location，refelTer 等。客户端的脚本程序可以通过 DOM 动态地检查和修改页面内容，它不依赖于提交数据到服务器端，而从客户端获得 DOM 中的数据在本地执行，如果 DOM 中的数据没有经过严格确认，就会产生 DOM XSS 漏洞。</li>
+</ul>
+<h2><span id="三-xss-漏洞原理">三、XSS 漏洞原理</span></h2><h3><span id="31-反射型-xss">3.1 反射型 XSS</span></h3><p>在黑盒测试中，这种类型比较容易通过漏洞扫描器直接发现，我们只需要按照扫描结果进行相应的验证就可以了。</p>
+<p>相对的在白盒审计中， 我们首先要寻找带参数的输出函数，接下来通过输出内容回溯到输入参数，观察是否过滤即可。<br>无案例不足以求真，这里我们选用<code>echo()函数</code>作为实例来分析：</p>
+<p>新建 XssReflex.php，代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt; </span><br><span class="line">&lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html; charset&#x3D;utf-8&quot; &#x2F;&gt; </span><br><span class="line">&lt;title&gt;XSS&lt;&#x2F;title&gt; </span><br><span class="line">&lt;&#x2F;head&gt; </span><br><span class="line">&lt;body&gt; </span><br><span class="line">&lt;form action&#x3D;&quot;&quot; method&#x3D;&quot;get&quot;&gt; </span><br><span class="line">&lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;input&quot;&gt;     </span><br><span class="line">&lt;input type&#x3D;&quot;submit&quot;&gt; </span><br><span class="line">&lt;&#x2F;form&gt; </span><br><span class="line">&lt;br&gt; </span><br><span class="line">&lt;?php </span><br><span class="line">$XssReflex &#x3D; $_GET[&#39;input&#39;];</span><br><span class="line">echo &#39;output:&lt;br&gt;&#39;.$XssReflex;</span><br><span class="line">?&gt; </span><br><span class="line">&lt;&#x2F;body&gt; </span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这是一个很简单、也很常见的页面：<br>变量 $XssReflex 获取 get 方式传递的变量名为 input 的变量值（值为一个字符串），然后直接通过 echo() 函数输出，注意这中间并未对用户输入进行任何过滤。</p>
+<p>打开 Firefox 输入 url：<code>localhost/codeaudit/xss/XssReflex.php</code> :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-aff389d031433dce.png" alt="img"></p>
+<p>当我们输入 <code>1</code> ，页面返回 1 :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-e74b7a5448e51311.png" alt="img"></p>
+<p>当我们输入<code>hello</code>时，页面返回 hello :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-60cffe4d6cd992aa.png" alt="img"></p>
+<p>以上都为正常的输出，但如果我们输出一些<code>javascript</code>代码呢？</p>
+<p>比如我们输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-909939f59402f6b7.png" alt="img"></p>
+<p>可以看到浏览器成功弹窗，说明我们输出的 JavaScript 代码成功被执行了。<br>我们查看网页 html 代码：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-4b3951ff10f4d8df.png" alt="img"></p>
+<p>第 12 行增加了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(&#39;xss&#39;)&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这个弹窗并没有什么实际的意义，但通过它我们知道输入 javascript 代码是可以被执行的，当我们输入一些其他函数，比如<code>document.cookie</code>就可以成功盗取用户的 cookie 信息，或者读取用户浏览器信息等，为我们进一步深入攻击做铺垫。</p>
+<h3><span id="32-存储型-xss">3.2 存储型 XSS</span></h3><p>和反射性 XSS 的即时响应相比，存储型 XSS 则需要先把利用代码保存在比如数据库或文件中，当 web 程序读取利用代码时再输出在页面上执行利用代码。但存储型 XSS 不用考虑绕过浏览器的过滤问题，屏蔽性也要好很多。<br>存储型 XSS 攻击流程：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-07ab49e8b1ea148a.png" alt="img"></p>
+<p>存储型 XSS 的白盒审计同样要寻找未过滤的输入点和未过滤的输出函数。</p>
+<p>使用 cat 命令查看 XssStorage.php 代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shiyanlou:~&#x2F; $ cat XssStorage.php</span><br></pre></td></tr></table></figure>
+
+
+
+<p>代码如下:&lt; 参考自<code>JackholeLiu的博客</code>&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style&#x3D;&quot;font-size:18px;&quot;&gt;&lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html;charset&#x3D;utf-8&quot;&#x2F;&gt;  </span><br><span class="line">&lt;html&gt;  </span><br><span class="line">&lt;head&gt;  </span><br><span class="line">&lt;title&gt;XssStorage&lt;&#x2F;title&gt;  </span><br><span class="line">&lt;&#x2F;head&gt;  </span><br><span class="line">&lt;body&gt;  </span><br><span class="line">&lt;h2&gt;Message Board&lt;h2&gt;  </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;form action&#x3D;&quot;XssStorage.php&quot; method&#x3D;&quot;post&quot;&gt;  </span><br><span class="line">Message:&lt;textarea id&#x3D;&#39;Mid&#39; name&#x3D;&quot;desc&quot;&gt;&lt;&#x2F;textarea&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">Subuser:&lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;user&quot;&#x2F;&gt;&lt;br&gt; </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;submit&quot; onclick&#x3D;&#39;loction&#x3D;&quot;XssStorage.php&quot;&#39;&#x2F;&gt;  </span><br><span class="line">&lt;&#x2F;form&gt;  </span><br><span class="line">&lt;?php  </span><br><span class="line">if(isset($_POST[&#39;user&#39;])&amp;&amp;isset($_POST[&#39;desc&#39;]))&#123;  </span><br><span class="line">$log&#x3D;fopen(&quot;sql.txt&quot;,&quot;a&quot;);  </span><br><span class="line">fwrite($log,$_POST[&#39;user&#39;].&quot;\r\n&quot;);  </span><br><span class="line">fwrite($log,$_POST[&#39;desc&#39;].&quot;\r\n&quot;);  </span><br><span class="line">fclose($log);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">if(file_exists(&quot;sql.txt&quot;))  </span><br><span class="line">&#123;  </span><br><span class="line">$read&#x3D; fopen(&quot;sql.txt&quot;,&#39;r&#39;);  </span><br><span class="line">while(!feof($read))  </span><br><span class="line">&#123;  </span><br><span class="line">    echo fgets($read).&quot;&lt;&#x2F;br&gt;&quot;;  </span><br><span class="line">&#125;  </span><br><span class="line">fclose($read);  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;  </span><br><span class="line">&lt;&#x2F;body&gt;  </span><br><span class="line">&lt;&#x2F;html&gt;&lt;&#x2F;span&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>页面功能简述：</p>
+<p>这个页面采用 POST 提交数据，生成、读取文本模拟数据库，提交数据之后页面会将数据写入 sql.txt，再打开页面时会读取 sql.txt 中内容并显示在网页上，实现了存储型 xss 攻击模拟。</p>
+<p>打开 Firefox 输入 url：<code>localhost/codeaudit/xss/XssStorage.php</code> :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-01d967d16884959b.png" alt="img"></p>
+<p>我们随意输出一些内容：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-75db875d30a09d1b.png" alt="img"></p>
+<p>可以看到页面正常显示页面留言信息。<br>当我们在 Message 中输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code>时，页面成功弹窗 :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-481b85eeb80c2726.png" alt="img"></p>
+<p>并且我们重启浏览器之后再加载该页面，页面依然会弹窗, 这是因为恶意代码已经写入数据库中，每当有人访问该页面时，恶意代码就会被加载执行！</p>
+<p>我们查看网页 html 代码：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-9b17baa60cba0d96.png" alt="img"></p>
+<p>这就是所谓的存储型 XSS 漏洞，<strong>一次提交之后，每当有用户访问这个页面都会受到 XSS 攻击，危害巨大。</strong></p>
+<h3><span id="33-dom-xss">3.3 DOM XSS</span></h3><p>这种 XSS 用的相对较少，并且由于其特殊性，常见的漏扫工具都无法检测出来，这里先不做讲解。</p>
+<p>记个待办，以后来补！</p>
+<h2><span id="四-xss-漏洞防范">四、XSS 漏洞防范</span></h2><h3><span id="41-反射型-xss-漏洞防范">4.1 反射型 xss 漏洞防范</span></h3><p>php 中 xss 的漏洞防范方法总结：&lt;参考自 Segmentfault&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">A.PHP直接输出html的，可以采用以下的方法进行过滤：</span><br><span class="line"></span><br><span class="line">    1.htmlspecialchars函数</span><br><span class="line">    2.htmlentities函数</span><br><span class="line">    3.HTMLPurifier.auto.php插件</span><br><span class="line">    4.RemoveXss函数</span><br><span class="line"></span><br><span class="line">B.PHP输出到JS代码中，或者开发Json API的，则需要前端在JS中进行过滤：</span><br><span class="line"></span><br><span class="line">    1.尽量使用innerText(IE)和textContent(Firefox),也就是jQuery的text()来输出文本内容</span><br><span class="line">    2.必须要用innerHTML等等函数，则需要做类似php的htmlspecialchars的过滤</span><br><span class="line"></span><br><span class="line">C.其它的通用的补充性防御手段</span><br><span class="line"></span><br><span class="line">    1.在输出html时，加上Content Security Policy的Http Header</span><br><span class="line">    （作用：可以防止页面被XSS攻击时，嵌入第三方的脚本文件等）</span><br><span class="line">    （缺陷：IE或低版本的浏览器可能不支持）</span><br><span class="line">    2.在设置Cookie时，加上HttpOnly参数</span><br><span class="line">    （作用：可以防止页面被XSS攻击时，Cookie信息被盗取，可兼容至IE6）</span><br><span class="line">    （缺陷：网站本身的JS代码也无法操作Cookie，而且作用有限，只能保证Cookie的安全）</span><br><span class="line">    3.在开发API时，检验请求的Referer参数</span><br><span class="line">    （作用：可以在一定程度上防止CSRF攻击）</span><br><span class="line">    （缺陷：IE或低版本的浏览器中，Referer参数可以被伪造）</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里我们选用 htmlentities() 函数进行测试：</p>
+<p>htmlentities() 函数把字符转换为 HTML 实体。</p>
+<p>新建 Xss_htmlentities.php， 代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt; </span><br><span class="line">&lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html; charset&#x3D;utf-8&quot; &#x2F;&gt; </span><br><span class="line">&lt;title&gt;XSS&lt;&#x2F;title&gt; </span><br><span class="line">&lt;&#x2F;head&gt; </span><br><span class="line">&lt;body&gt; </span><br><span class="line">&lt;form action&#x3D;&quot;&quot; method&#x3D;&quot;get&quot;&gt; </span><br><span class="line">&lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;input&quot;&gt;     </span><br><span class="line">&lt;input type&#x3D;&quot;submit&quot;&gt; </span><br><span class="line">&lt;&#x2F;form&gt; </span><br><span class="line">&lt;br&gt; </span><br><span class="line">&lt;?php </span><br><span class="line">$XssReflex &#x3D; $_GET[&#39;input&#39;];</span><br><span class="line">echo &#39;output:&lt;br&gt;&#39;.htmlentities($XssReflex);#仅在这里对变量 $XssReflex 做了处理.</span><br><span class="line">?&gt; </span><br><span class="line">&lt;&#x2F;body&gt; </span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 Firefox 输入 url：<code>localhost/codoaudit/xss/Xsshtmlentities.php</code> :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-b0177ceb2ba27531.png" alt="img"></p>
+<p>当我们输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-f8821c2140b06378.png" alt="img"></p>
+<p>可以看到页面并没有弹窗。<br>我们再查看网页 html 代码：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-678390ac7147eb2b.png" alt="img"></p>
+<p>可以看到 htmlentities() 函数对用户输入的<code>&lt;&gt;</code>做了转义处理, 恶意代码当然也就没法执行了。<br>还有其他过滤函数，纸上学来终觉浅，有兴趣的同学可以自己去尝试一番</p>
+<h3><span id="42-存储型-xss-漏洞防范">4.2 存储型 xss 漏洞防范</span></h3><p>存储型 XSS 对用户的输入进行过滤的方式和反射型 XSS 相同，这里我们使用<code>htmlspecialchars()</code>函数进行演示：</p>
+<p>htmlentities() : 把预定义的字符 “&lt;” （小于）和 “&gt;” （大于）转换为 HTML 实体</p>
+<p>htmlspecialchars 和 htmlentities 的区别：</p>
+<p>htmlspecialchars 只转义 <code>&amp; 、&quot; 、&#39; 、&lt; 、&gt;</code> 这几个 html 代码，而 htmlentities 却会转化所有的 html 代码，连同里面的它无法识别的中文字符也会转化。</p>
+<p>新建 Xss_htmlspecialchars_Storage.php ，代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;span style&#x3D;&quot;font-size:18px;&quot;&gt;&lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html;charset&#x3D;utf-8&quot;&#x2F;&gt;  </span><br><span class="line">&lt;html&gt;  </span><br><span class="line">&lt;head&gt;  </span><br><span class="line">&lt;title&gt;XssStorage&lt;&#x2F;title&gt;  </span><br><span class="line">&lt;&#x2F;head&gt;  </span><br><span class="line">&lt;body&gt;  </span><br><span class="line">&lt;h2&gt;Message Board&lt;h2&gt;  </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;form action&#x3D;&quot;Xss_htmlspecialchars_Storage.php&quot; method&#x3D;&quot;post&quot;&gt;  </span><br><span class="line">Message:&lt;textarea id&#x3D;&#39;Mid&#39; name&#x3D;&quot;desc&quot;&gt;&lt;&#x2F;textarea&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">&lt;br&gt;  </span><br><span class="line">Subuser:&lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;user&quot;&#x2F;&gt;&lt;br&gt; </span><br><span class="line">&lt;br&gt;</span><br><span class="line">&lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;submit&quot; onclick&#x3D;&#39;loction&#x3D;&quot;XssStorage.php&quot;&#39;&#x2F;&gt;  </span><br><span class="line">&lt;&#x2F;form&gt;  </span><br><span class="line">&lt;?php  </span><br><span class="line">if(isset($_POST[&#39;user&#39;])&amp;&amp;isset($_POST[&#39;desc&#39;]))&#123;  </span><br><span class="line">$log&#x3D;fopen(&quot;sqlStorage.txt&quot;,&quot;a&quot;);  </span><br><span class="line">fwrite($log,htmlspecialchars($_POST[&#39;user&#39;]).&quot;\r\n&quot;); # 在此对用户输入数据$_POST[&#39;user&#39;]进行过滤</span><br><span class="line">fwrite($log,htmlspecialchars($_POST[&#39;desc&#39;]).&quot;\r\n&quot;); # 在此对用户输入数据$_POST[&#39;desc&#39;]进行过滤</span><br><span class="line">fclose($log);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">if(file_exists(&quot;sqlStorage.txt&quot;))  </span><br><span class="line">&#123;  </span><br><span class="line">$read&#x3D; fopen(&quot;sqlStorage.txt&quot;,&#39;r&#39;);  </span><br><span class="line">while(!feof($read))  </span><br><span class="line">&#123;  </span><br><span class="line">    echo fgets($read).&quot;&lt;&#x2F;br&gt;&quot;;  </span><br><span class="line">&#125;  </span><br><span class="line">fclose($read);  </span><br><span class="line">&#125;  </span><br><span class="line">?&gt;  </span><br><span class="line">&lt;&#x2F;body&gt;  </span><br><span class="line">&lt;&#x2F;html&gt;&lt;&#x2F;span&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在 Firefox 输入 url：<code>localhost/codoaudit/xss/Xss_htmlspecialchars_Storage.php</code> :</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-038c78407caae5d2.png" alt="img"></p>
+<p>当我们在 Message 中输入<code>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</code> ：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-4a47fed989a18325.png" alt="img"></p>
+<p>可以看到页面并没有弹窗。<br>我们再查看网页 html 代码：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6230889-0b0257806e619f56.png" alt="img"></p>
+<p>可以看到 htmlspecialchars() 函数对用户输入的<code>&lt;&gt;</code>做了转义处理。</p>
+
+      
+    </div>
+    
+    
+    
+    
+       <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------</div>
+
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web%E6%94%BB%E5%87%BB/" rel="tag"># Web攻击</a>
+          
+            <a href="/tags/XSS/" rel="tag"># XSS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/20/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="next" title="设计模式">
+                <i class="fa fa-chevron-left"></i> 设计模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/20/sql%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB/" rel="prev" title="sql注入攻击">
+                sql注入攻击 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Ran Binkesi" />
+          <p class="site-author-name" itemprop="name">Ran Binkesi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#xss-漏洞"><span class="nav-number">1.</span> <span class="nav-text">XSS 漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-文章简介"><span class="nav-number">1.1.</span> <span class="nav-text">一、文章简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-xss-漏洞简介"><span class="nav-number">1.2.</span> <span class="nav-text">二、XSS 漏洞简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-xss-漏洞原理"><span class="nav-number">1.3.</span> <span class="nav-text">三、XSS 漏洞原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#31-反射型-xss"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 反射型 XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#32-存储型-xss"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 存储型 XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#33-dom-xss"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 DOM XSS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-xss-漏洞防范"><span class="nav-number">1.4.</span> <span class="nav-text">四、XSS 漏洞防范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#41-反射型-xss-漏洞防范"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 反射型 xss 漏洞防范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#42-存储型-xss-漏洞防范"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 存储型 xss 漏洞防范</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran Binkesi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

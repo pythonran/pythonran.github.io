@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Sql注入,Web攻击," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/%5Bobject%20Object%5D?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="目录 最基础的注入 - union 注入攻击 Boolean 注入攻击 - 布尔盲注 报错注入攻击 时间注入攻击 - 时间盲注 堆叠查询注入攻击 二次注入攻击 宽字节注入攻击 base64 注入攻击 cookie 注入攻击 - http 请求头参数注入 XFF 注入攻击 - http 请求头参数注入 知道绝对路径的注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入攻击">
+<meta property="og:url" content="http://yoursite.com/2021/07/20/sql%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="小楼一夜醉酒">
+<meta property="og:description" content="目录 最基础的注入 - union 注入攻击 Boolean 注入攻击 - 布尔盲注 报错注入攻击 时间注入攻击 - 时间盲注 堆叠查询注入攻击 二次注入攻击 宽字节注入攻击 base64 注入攻击 cookie 注入攻击 - http 请求头参数注入 XFF 注入攻击 - http 请求头参数注入 知道绝对路径的注入">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1740059/201909/1740059-20190930104009938-51110633.png">
+<meta property="article:published_time" content="2021-07-20T06:15:26.510Z">
+<meta property="article:modified_time" content="2021-08-18T07:14:04.310Z">
+<meta property="article:author" content="Ran Binkesi">
+<meta property="article:tag" content="Sql注入">
+<meta property="article:tag" content="Web攻击">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1740059/201909/1740059-20190930104009938-51110633.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/20/sql注入攻击/"/>
+
+
+
+
+
+  <title>sql注入攻击 | 小楼一夜醉酒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="小楼一夜醉酒" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小楼一夜醉酒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/20/sql%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ran Binkesi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小楼一夜醉酒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sql注入攻击</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-20T14:15:26+08:00">
+                2021-07-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2><span id="目录">目录</span></h2><ul>
+<li>最基础的注入 - union 注入攻击</li>
+<li>Boolean 注入攻击 - 布尔盲注</li>
+<li>报错注入攻击</li>
+<li>时间注入攻击 - 时间盲注</li>
+<li>堆叠查询注入攻击</li>
+<li>二次注入攻击</li>
+<li>宽字节注入攻击</li>
+<li>base64 注入攻击</li>
+<li>cookie 注入攻击 - http 请求头参数注入</li>
+<li>XFF 注入攻击 - http 请求头参数注入</li>
+<li>知道绝对路径的注入<a id="more"></a>
+
+
+</li>
+</ul>
+<h2><span id="0x01-最基础的注入-union-注入攻击">0x01 最基础的注入 - union 注入攻击</span></h2><ol>
+<li><p>判断是 get 型还是 post 型注入；</p>
+</li>
+<li><p>找到正确的闭合规则；</p>
+</li>
+<li><p>order by 查询字段数；</p>
+</li>
+<li><p>union select 1,2….. 查看显示位是第几位，没有的话就试试把 id=1 的显示位让出来，让其等于 id=-1；</p>
+<p><img src="https://img2018.cnblogs.com/blog/1740059/201909/1740059-20190930104009938-51110633.png" alt="img"></p>
+</li>
+<li><p>第二、三位显示出来了，那么即可在这两个位置写入 sql 语句；</p>
+</li>
+<li><p>查询当前数据库, 当前 mysql 用户 union select 1,user(),database()；</p>
+</li>
+<li><p>查询当前数据库里面的表 union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=”data_name”;</p>
+</li>
+<li><p>查询到敏感表名 user，继续查询表里面的字段 union select 1,2,group_concat(column_name) from information_schema.columns where table_name=”user”;</p>
+</li>
+<li><p>查询字段，例如 “id”、”passwd” 的内容 union select 1,id,passwd from user;</p>
+</li>
+<li><p>拿到用户、密码登入后台。</p>
+</li>
+</ol>
+<h2><span id="0x02-boolean-注入攻击-布尔盲注">0x02 Boolean 注入攻击 - 布尔盲注</span></h2><ul>
+<li>查看现象，能报错，但没有报错信息，正确查询也显示不了查询内容就属于布尔盲注，只存在两种状态，对或错；</li>
+<li>由页面的两种不同返回的状态来判定我们的闭合规则；</li>
+<li>为了方便，我们这里假设返回正确用 “yes”，返回错误用“no” 来表示这两种状态</li>
+<li>找到闭合规则后，我们在闭合规则里面 and 1=1 和 and 1=2 测试一下，看看最后返回是不是两种状态；</li>
+<li>布尔盲注要用到 length() 和 substr() 语句，用两种状态来猜解数据库、表名等的长度和正确字母；</li>
+<li>先用 and length(database())&gt;2 来猜数据库的长度，使用的是二分法；</li>
+<li>再用 and substr(database(),1,1)=’t’ 来确定第一个字母，可用 burp 跑，26 个字母, 哪个字母返回 yes 则代表第一个字母就是它；</li>
+<li>and substr(database(),2,1)=’t’ 代表当前数据库的第二个字母；</li>
+<li>最后结合长度，成功的将数据库猜解出来；</li>
+<li>后面的操作跟 union 注入的步骤差不多了，只是 sql 语句写在 上文的 database() 处。</li>
+</ul>
+<h2><span id="0x03-报错注入攻击">0x03 报错注入攻击</span></h2><ol>
+<li><p>只要注入点有 sql 报错信息，那么就可以使用报错注入；</p>
+</li>
+<li><p>还是一样，引号报错，然后找到闭合规则，页面正常显示，则可以在闭合规则中开始写入报错注入的 sql 语句；</p>
+</li>
+<li><p>updatexml 报错获取当前数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and updatexml(1,concat(0x7e,(select database()),0x7e),1)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>floor 报错获取当前数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">and (select 1 from (select count(*),concat((database()),floor (rand(0)*2))x from information_schema.tables group by x)a)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>两种方式都可行，如果第一个不行就试试第二个</p>
+</li>
+<li><p>接着可以利用 select 语句替换掉上面 database() 来继续获取数据库中的表名、字段名，查询语句和 union 注入攻击的语句相同；</p>
+</li>
+<li><p>只不过这里不能再使用 group_concat 了，因为报错注入只显示一条结果，所以需要使用 limit 语句；</p>
+</li>
+</ol>
+<h2><span id="0x04-时间注入攻击-时间盲注">0x04 时间注入攻击 - 时间盲注</span></h2><ul>
+<li><p>没有明确的现象，不管是对是错都返回一个状态；</p>
+</li>
+<li><p>但是如果用 sleep(5) 方法，能让响应时间延迟为 5 秒以上，那么就为时间盲注；</p>
+</li>
+<li><p>我们用 sleep(5) 函数构造了一个时间延时的状态，因此，我们又有了两种状态，像布尔盲注一样可以根据这两种状态来判定数据库、表名和字段名的长度和正确的每个字母；</p>
+</li>
+<li><p>同样的找到正确的闭合规则，当然，这个闭合规则得配合着 and sleep(5) 语句来构造，哪一个闭合规则执行了 sleep(5)，那么就是正确得闭合规则；</p>
+</li>
+<li><p>时间盲注配合着 if(A,B,C) 语句结合使用，含义是：如果 A 是 true，则返回 B（也就是执行 B），否则返回 C（执行 C）；</p>
+</li>
+<li><p>那么判断当前数据库名的长度的语句为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (length(database())&gt;1,sleep(5),1)</span><br></pre></td></tr></table></figure>
+
+<p>就是说如果数据库长度大于 1，那么响应延时 5 秒，否则执行 select 1(也就是不延时)，由此来推出数据库长度。</p>
+</li>
+<li><p>判断当前数据库名的第一个和第二个字母的语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(substr(database(),1,1)&#x3D;&#39;s&#39;,sleep(5),1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(substr(database(),2,1)&#x3D;&#39;s&#39;,sleep(5),1)</span><br></pre></td></tr></table></figure>
+
+<p>只有第一个字母等于 26 个字母中正确的字母时，才会延时 5 秒，因此可以通过 burp 或者 sqlmap 来跑。</p>
+</li>
+<li><p>根据数据库名长度以此内推即可得出完整的数据库的库命、表名、字段名和具体内容。</p>
+</li>
+</ul>
+<h2><span id="0x05-堆叠查询注入攻击">0x05 堆叠查询注入攻击</span></h2><ol>
+<li><p>可以使用堆叠注入的地方也可以使用布尔盲注与时间盲注；</p>
+</li>
+<li><p>同样先找出正确的闭合规则，然后也看两种状态来猜解库名、表名等；</p>
+</li>
+<li><p>类似与下面在分号后面可执行新的语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">;select if(length(database())&gt;1,sleep(3),1)</span><br><span class="line">;select if(substr(database(),1,1)&#x3D;&#39;r&#39;,sleep(3),1)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>堆叠的; 分号后可以执行新的 sql 语句，因此在知道网站根目录的情况下可以直接写日志拿 shell。</p>
+</li>
+</ol>
+<h2><span id="0x06-二次注入攻击">0x06 二次注入攻击</span></h2><ul>
+<li>二次注入一共有两个 url，url 一用来注入，也就是注入点，插入 sql 语句的地方，另外一个 url 用来返回信息；</li>
+<li>也就是 url 一插入了 sql 语句，url 一的响应里面就会返回这条信息对应的 id 值，然后 url 二就传入这个新 id 值，然后访问，响应回来之后将会爆出 sql 语句查询的结果，正确或者错误的 sql 信息；</li>
+<li>就相当于 url 是一个用户注册的地方，用户注册后会在数据库里面加入新 id 存放用户的注册信息，那么这个 id 可以传给 url 二来访问，url 二就可以显示出用户的注册信息，但如果注册信息含义恶意 sql 语句，url 二就会显示出敏感的数据库信息；</li>
+<li>跟 union 注入攻击差不多，只是回显的信息需要在另外的 url 中显示出来了；</li>
+<li>后面就是 union 注入攻击的常规操作。</li>
+</ul>
+<h2><span id="0x07-宽字节注入攻击">0x07 宽字节注入攻击</span></h2><ol>
+<li>如果遇到单、双引号被转义，变成了反斜杠，导致参数 id 无法逃逸单引号的包围；</li>
+<li>一般情况下，此处就不存在 sql 注入漏洞的；</li>
+<li>但是如果数据库的编码为 GBK 时，就可以使用宽字节注入，因此在不知道是否是 GBK 编码时，都可以尝试去使用宽字节注入；</li>
+<li>宽字节的格式是在地址后先加一个 %df ，再加单引号，因为反斜杠的编码为 %5c，在 GBK 编码中，%df%5c 是繁体字 “連”，因此，单引号成功逃逸，爆出 sql 错误；</li>
+<li>因此构造闭合规则时，在单引号前面加上 %df 就行了；</li>
+<li>之后在闭合规则中写入同 union 注入的一些查询语句就行了；</li>
+</ol>
+<h2><span id="0x08-base64-注入攻击">0x08 base64 注入攻击</span></h2><ul>
+<li>如果遇到 url 的参数 id 的值看起来像 base64 的，先拿去 url 解码，然后如果是 base64，拿去 base64 解码，解出来的应该就是 id 的值（1，2 等数字）；</li>
+<li>那么如果要对这个 url 进行 sql 注入测试，就需要对 id 后面的所有值进行 base64 编码；</li>
+<li>注入的方式步骤都是跟 union 注入一样的，只不过后面的所有值（整个 payload）都要进行 base64 编码后传给 url 的 c 参数提交，包括闭合规则。</li>
+</ul>
+<h2><span id="0x09-http-请求头参数注入-cookie-注入攻击">0x09 HTTP 请求头参数注入 - cookie 注入攻击</span></h2><ol>
+<li><p>抓包对一个 url 的 http 请求头的所有参数进行 sql 注入测试，里面的所有参数都有可能存在注入点，如果响应包出现 sql 报错，那么测试的这个参数就是注入点；</p>
+</li>
+<li><p>常见的 http 头部注入的参数有：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">【Referer】、【X-Forwarded-For】、【Cookie】、【X-Real-IP】、【Accept-Language】、【Authorization】</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果测试到 cookie 参数的时候，响应有报 sql 错误，那么就是 cookie 注入攻击；</p>
+</li>
+<li><p>和 union 注入的差别就在于注入点不一样，之后使用 union 注入的方法即可。</p>
+</li>
+</ol>
+<h2><span id="0x10-http-请求头参数注入-xff-注入攻击">0x10 HTTP 请求头参数注入 - XFF 注入攻击</span></h2><ul>
+<li>XFF 注入即 HTTP 头部的 X-Forwarded-for 参数存在 sql 注入；</li>
+<li>例如测试此参数的值 X-Forwarded-for:127.0.0.1’ 响应有 sql 报错，那么此处就是注入点；</li>
+<li>之后使用 union 注入的方法完成即可。</li>
+</ul>
+<h2><span id="0x11-知道绝对路径的注入">0x11 知道绝对路径的注入</span></h2><ol>
+<li>如果通过一些方式爆出了网站的根目录，并且知道此站点存在 sql 注入；</li>
+<li>猜测此数据库可能有 file 权限，那么我们就可以使用语句：into outfile 来写 shell 到网站的根目录下，之后用菜刀连接；</li>
+<li>如果数据库没有 file 权限，那么我们用 sqlmap 的参数 –is-dba 来查看当前数据库的用户是否有管理员权限；</li>
+<li>如果有管理员权限，我们就可以使用 sqlmap 里面的参数命令 –os-shell 来上传、反弹 shell，最终 getshell；</li>
+<li>如果 file、管理员权限都没有，那么另寻思路，日志、缓存写入等。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+    
+       <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------</div>
+
+    
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Sql%E6%B3%A8%E5%85%A5/" rel="tag"># Sql注入</a>
+          
+            <a href="/tags/Web%E6%94%BB%E5%87%BB/" rel="tag"># Web攻击</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/20/XSS%20%E6%BC%8F%E6%B4%9E/" rel="next" title="XSS 漏洞">
+                <i class="fa fa-chevron-left"></i> XSS 漏洞
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Ran Binkesi" />
+          <p class="site-author-name" itemprop="name">Ran Binkesi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-最基础的注入-union-注入攻击"><span class="nav-number">2.</span> <span class="nav-text">0x01 最基础的注入 - union 注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-boolean-注入攻击-布尔盲注"><span class="nav-number">3.</span> <span class="nav-text">0x02 Boolean 注入攻击 - 布尔盲注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-报错注入攻击"><span class="nav-number">4.</span> <span class="nav-text">0x03 报错注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-时间注入攻击-时间盲注"><span class="nav-number">5.</span> <span class="nav-text">0x04 时间注入攻击 - 时间盲注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05-堆叠查询注入攻击"><span class="nav-number">6.</span> <span class="nav-text">0x05 堆叠查询注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x06-二次注入攻击"><span class="nav-number">7.</span> <span class="nav-text">0x06 二次注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x07-宽字节注入攻击"><span class="nav-number">8.</span> <span class="nav-text">0x07 宽字节注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x08-base64-注入攻击"><span class="nav-number">9.</span> <span class="nav-text">0x08 base64 注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x09-http-请求头参数注入-cookie-注入攻击"><span class="nav-number">10.</span> <span class="nav-text">0x09 HTTP 请求头参数注入 - cookie 注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x10-http-请求头参数注入-xff-注入攻击"><span class="nav-number">11.</span> <span class="nav-text">0x10 HTTP 请求头参数注入 - XFF 注入攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x11-知道绝对路径的注入"><span class="nav-number">12.</span> <span class="nav-text">0x11 知道绝对路径的注入</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ran Binkesi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
